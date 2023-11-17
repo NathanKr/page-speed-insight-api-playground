@@ -11,3 +11,9 @@
 <ul>
 <li><a href='https://developers.google.com/speed/docs/insights/v5/get-started'>Get started</a></li>
 </ul>
+
+<h2>todo</h2>
+<ul>
+<li>add pages to base url - json</li>
+<li>add categories url - json</li>
+</ul>
