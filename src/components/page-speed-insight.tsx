@@ -6,6 +6,7 @@ import {
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
+import PsiScore from "./psi-score";
 
 const PageSpeedInsight = () => {
   const [root, setRoot] = useState<Root>();
@@ -20,6 +21,10 @@ const PageSpeedInsight = () => {
   };
 
   useEffect(() => {
+    getPsiInfo(info);
+  }, []);
+
+  function getPsiInfo(info: IGetPsiInfo) {
     const baseApiUrl = "/api/psi";
     const queryString = objectToQueryString(info);
     const url = appendQueryStringToUrl(baseApiUrl, queryString);
@@ -28,15 +33,14 @@ const PageSpeedInsight = () => {
     axios
       .get(url)
       .then((res) => {
-        console.log(res);
-        setRoot(res.data);
+        setRoot(res.data.root);
         setLoading(false);
       })
       .catch((err: AxiosError) => {
         setErr(err);
         setLoading(false);
       });
-  }, []);
+  }
 
   if (err) {
     return <div>axios error</div>;
@@ -50,7 +54,12 @@ const PageSpeedInsight = () => {
     return <div>root is empty</div>;
   }
 
-  return <div>ok</div>;
+  return (
+    <PsiScore
+      cat={root.lighthouseResult.categories}
+      url={root.lighthouseResult.requestedUrl}
+    />
+  );
 };
 
 export default PageSpeedInsight;
