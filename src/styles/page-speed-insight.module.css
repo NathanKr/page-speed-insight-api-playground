@@ -8,7 +8,7 @@
 
 /* כל שורה זוגית תקבל את הרקע הזה */
 .container tr:nth-child(even) {
-background-color: lightsalmon;
+background-color: lightblue;
 }
 
 .container th , .container td {

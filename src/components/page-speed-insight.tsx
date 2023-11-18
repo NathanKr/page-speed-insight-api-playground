@@ -8,7 +8,7 @@ import {
 import axios, { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
 import PsiScore from "./psi-score";
-import styles from '@/styles/page-speed-insight.module.css'
+import styles from "@/styles/page-speed-insight.module.css";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -80,11 +80,9 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     />
   ));
 
-  return (
-    <div className={styles.container}>
-      {elemError}
-      {elemLoading}
-      <table>
+  const elemTable = (
+    <table>
+      <thead>
         <tr>
           <th>url</th>
           <th>strategy</th>
@@ -93,8 +91,22 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
           <th>best practices</th>
           <th>accessibility</th>
         </tr>
-        {elems}
-      </table>
+      </thead>
+      <tbody>{elems}</tbody>
+    </table>
+  );
+
+  let elemComplate;
+  if (infos.length == roots.size) {
+    elemComplate = <p>completed</p>;
+  }
+  
+  return (
+    <div className={styles.container}>
+      {elemError}
+      {elemLoading}
+      {elemTable}
+      {elemComplate}
     </div>
   );
 };
