@@ -6,6 +6,7 @@ import {
   Seo,
 } from "@/types/types";
 import React, { FC } from "react";
+import styles from '@/styles/psi-score.module.css'
 
 interface IProps {
   cat: Categories;
@@ -25,7 +26,7 @@ const getElem = (
 };
 const PsiScore: FC<IProps> = ({ cat, url }) => {
   return (
-    <div>
+    <div className={styles.PsiScore}>
       <p>url : {url}</p>
       {getElem("performance", cat.performance)}
       {getElem("seo", cat.seo)}

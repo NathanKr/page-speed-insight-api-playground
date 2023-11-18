@@ -13,7 +13,7 @@ interface IProps {
 }
 
 const PageSpeedInsight: FC<IProps> = ({ infos }) => {
-  const [roots, setRoots] = useState<Root[]>([]);
+  const [roots, setRoots] = useState<Map<string, Root>>(new Map());
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -27,12 +27,15 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
   }, []);
 
   const addNewInfo = (newInfo: Root) => {
-    setRoots((prevItems) => {
-      // Use the spread operator to create a new array with the new item
-      const updatedItems = [...prevItems, newInfo];
+    setRoots((prevRoots) => {
+      // Use the spread operator to create a new Map with the previous items
+      const updatedRoots = new Map(prevRoots);
 
-      // Return the updated array, which will be used as the new state
-      return updatedItems;
+      // Add the new item to the Map using its ID as the key
+      updatedRoots.set(newInfo.lighthouseResult.requestedUrl, newInfo);
+
+      // Return the updated Map, which will be used as the new state
+      return updatedRoots;
     });
   };
 
@@ -66,13 +69,13 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     elemLoading = <div>Loading please wait ........</div>;
   }
 
-  const elems = roots.map(p => (
-      <PsiScore
-        key={p.id}
-        cat={p.lighthouseResult.categories}
-        url={p.lighthouseResult.requestedUrl}
-      />
-    ));
+  const elems = Array.from(roots.values()).map((p) => (
+    <PsiScore
+      key={p.id}
+      cat={p.lighthouseResult.categories}
+      url={p.lighthouseResult.requestedUrl}
+    />
+  ));
 
   return (
     <>

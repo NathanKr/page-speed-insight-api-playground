@@ -1,0 +1,9 @@
+
+.PsiScore {
+    display: flex;
+  }
+  
+  .PsiScore p {
+    width: 20%;
+    margin: 0;
+  }
