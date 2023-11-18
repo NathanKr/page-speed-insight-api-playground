@@ -2,11 +2,13 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 import { Root } from "@/types/types";
 import {
   appendQueryStringToUrl,
+  determinePlatform,
   objectToQueryString,
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
 import PsiScore from "./psi-score";
+import styles from '@/styles/page-speed-insight.module.css'
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -72,17 +74,28 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
   const elems = Array.from(roots.values()).map((p) => (
     <PsiScore
       key={p.id}
+      strategy={determinePlatform(p.lighthouseResult.requestedUrl)}
       cat={p.lighthouseResult.categories}
       url={p.lighthouseResult.requestedUrl}
     />
   ));
 
   return (
-    <>
+    <div className={styles.container}>
       {elemError}
       {elemLoading}
-      {elems}
-    </>
+      <table>
+        <tr>
+          <th>url</th>
+          <th>strategy</th>
+          <th>performance</th>
+          <th>seo</th>
+          <th>best practices</th>
+          <th>accessibility</th>
+        </tr>
+        {elems}
+      </table>
+    </div>
   );
 };
 

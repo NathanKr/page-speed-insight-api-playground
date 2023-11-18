@@ -1,0 +1,18 @@
+
+.container table {
+    border: 1px solid grey;
+    width: 100%;
+    /* מאחד גבולות כך שנראה טוב יותר */
+    border-collapse: collapse;
+}
+
+/* כל שורה זוגית תקבל את הרקע הזה */
+.container tr:nth-child(even) {
+background-color: lightsalmon;
+}
+
+.container th , .container td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid grey;
+}
