@@ -7,7 +7,7 @@ function getCategoryInUrl(option: boolean, cat: CategoryGoogleApi): string {
 
 export function getPsiAPIUrl(info: IGetPsiInfo): string {
   const { PAGE_SPEED_INSIGHT_API_KEY } = process.env;
-  const { pageUrl } = info;
+  const { pageUrl,strategy } = info;
   let categories = getCategoryInUrl(
     info.accessibility,
     CategoryGoogleApi.accessibility
@@ -22,5 +22,5 @@ export function getPsiAPIUrl(info: IGetPsiInfo): string {
   );
   categories += getCategoryInUrl(info.seo, CategoryGoogleApi.seo);
 
-  return `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${pageUrl}&key=${PAGE_SPEED_INSIGHT_API_KEY}${categories}`;
+  return `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${pageUrl}&key=${PAGE_SPEED_INSIGHT_API_KEY}&strategy=${strategy}${categories}`;
 }

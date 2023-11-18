@@ -18,17 +18,16 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    infos.forEach((info,i) => {
+    infos.forEach((info, i) => {
       // use setInterval so google api will get a lot of stuff at once
-      setTimeout(()=>{
-        getPsiInfo(info)
-      } , i*3000) ;
+      setTimeout(() => {
+        getPsiInfo(info);
+      }, i * 3000);
     });
   }, []);
 
-  const addNewInfo = (newInfo : Root) => {
+  const addNewInfo = (newInfo: Root) => {
     setRoots((prevItems) => {
-
       // Use the spread operator to create a new array with the new item
       const updatedItems = [...prevItems, newInfo];
 
@@ -41,13 +40,13 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     const baseApiUrl = "/api/psi";
     const queryString = objectToQueryString(info);
     const url = appendQueryStringToUrl(baseApiUrl, queryString);
-    
+
     setErr(null);
     setLoading(true);
     axios
       .get(url)
       .then((res) => {
-        addNewInfo(res.data.root)
+        addNewInfo(res.data.root);
         setLoading(false);
       })
       .catch((err: AxiosError) => {
@@ -56,23 +55,32 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
       });
   }
 
+  let elemError;
   if (err) {
-    return <div>axios error : {err.message} </div>;
+    elemError = <div>axios error : {err.message} </div>;
   }
+
+  let elemLoading;
 
   if (loading) {
-    return <div>Loading please wait ........</div>;
+    elemLoading = <div>Loading please wait ........</div>;
   }
 
-  const elems = roots.map((p, i) => (
-    <PsiScore
-      key={i}
-      cat={p.lighthouseResult.categories}
-      url={p.lighthouseResult.requestedUrl}
-    />
-  ));
+  const elems = roots.map(p => (
+      <PsiScore
+        key={p.id}
+        cat={p.lighthouseResult.categories}
+        url={p.lighthouseResult.requestedUrl}
+      />
+    ));
 
-  return <>{elems}</>;
+  return (
+    <>
+      {elemError}
+      {elemLoading}
+      {elems}
+    </>
+  );
 };
 
 export default PageSpeedInsight;

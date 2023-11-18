@@ -1,3 +1,4 @@
+import StrategyGoogleApi from "@/types/e-strategy-google-api";
 import IGetPsiInfo from "@/types/i-get-psi-info";
 const baseUrl = "https://nathankrasney.com";
 const tabs: string[] = [
@@ -7,7 +8,7 @@ const tabs: string[] = [
   "/courses",
   "/quiz",
   "/testimonials",
-  "events",
+  "/events",
 ];
 const catChosen = {
   performance: true,
@@ -15,6 +16,7 @@ const catChosen = {
   bestPractices: true,
   seo: true,
 };
+const strategy = StrategyGoogleApi.mobile;
 export const infos: IGetPsiInfo[] = tabs.map((tab) => {
-  return { pageUrl: `${baseUrl}${tab}`, ...catChosen };
+  return { pageUrl: `${baseUrl}${tab}`, ...catChosen, strategy };
 });
