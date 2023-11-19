@@ -1,9 +1,5 @@
 import {
-  Accessibility,
-  BestPractices,
   Categories,
-  Performance,
-  Seo,
 } from "@/types/types";
 import React, { FC } from "react";
 import StrategyGoogleApi from "@/types/e-strategy-google-api";

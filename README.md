@@ -14,6 +14,9 @@
 
 <h2>todo</h2>
 <ul>
-<li>add pages to base url - json</li>
-<li>add categories url - json</li>
+<li>currently the infos: IGetPsiInfo[] is hard code in data\infos.ts - need some ui to choose it in case this is an external tool</li>
+<li>use score in percentage and add color red ,greed , orange according to page speed insight</li>
+<li>mark the loweset score per category</li>
+<li>implementation : the categories : performance ,accessibility, bestPractices,seo are used by me as speperate properties e.g. in IGetPsiInfo as bool or it might save  code by using map with enum e.g. CategoryGoogleApi </li>
+<li>might be nice to store results on google drive in some way and see statistics</li>
 </ul>
