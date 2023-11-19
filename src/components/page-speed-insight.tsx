@@ -84,12 +84,12 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     <table>
       <thead>
         <tr>
-          <th>url</th>
-          <th>strategy</th>
-          <th>performance</th>
-          <th>seo</th>
-          <th>best practices</th>
-          <th>accessibility</th>
+          <th>Url</th>
+          <th>Strategy</th>
+          <th>Performance</th>
+          <th>Seo</th>
+          <th>Best Practices</th>
+          <th>Accessibility</th>
         </tr>
       </thead>
       <tbody>{elems}</tbody>
@@ -100,7 +100,7 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
   if (infos.length == roots.size) {
     elemComplate = <p>completed</p>;
   }
-  
+
   return (
     <div className={styles.container}>
       {elemError}
