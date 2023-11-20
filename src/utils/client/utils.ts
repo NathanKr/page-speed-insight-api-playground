@@ -1,6 +1,5 @@
 import StrategyGoogleApi from "@/types/e-strategy-google-api";
-import { Root } from "@/types/types";
-
+import dayjs from 'dayjs'
 export function objectToQueryString(obj: Record<string, any>): string {
   const queryString = Object.keys(obj)
     .map((key) => {
@@ -38,6 +37,12 @@ export const determinePlatform = (url: string): StrategyGoogleApi => {
   }
 };
 
-// export function determinePlatformFromRoot(root: Root): "mobile" | "desktop" {
-//   return determinePlatform(root.lighthouseResult.requestedUrl);
-// }
+export function getLocalDateAndTimeNow(): string {
+  const now = new Date();
+  const milliseconds = now.getTime();
+    return getLocalDateAndTime(milliseconds);
+}
+
+export function getLocalDateAndTime(milliseconds: number): string {
+  return dayjs(milliseconds).format("DD MMM YY  HH:mm  Z  A");
+}

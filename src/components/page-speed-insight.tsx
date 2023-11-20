@@ -3,6 +3,7 @@ import { Root } from "@/types/types";
 import {
   appendQueryStringToUrl,
   determinePlatform,
+  getLocalDateAndTimeNow,
   objectToQueryString,
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
@@ -98,7 +99,7 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
 
   let elemComplate;
   if (infos.length == roots.size) {
-    elemComplate = <p>completed</p>;
+    elemComplate = <p>completed : {getLocalDateAndTimeNow()}</p>;
   }
 
   return (
