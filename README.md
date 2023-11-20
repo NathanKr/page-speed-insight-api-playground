@@ -14,6 +14,7 @@
 
 <h2>todo</h2>
 <ul>
+<li>the test is not compiling</li>
 <li>currently the infos: IGetPsiInfo[] is hard code in data\infos.ts - need some ui to choose it in case this is an external tool</li>
 <li>use score in percentage and add color red ,greed , orange according to page speed insight</li>
 <li>mark the loweset score per category</li>

@@ -2,8 +2,8 @@ import StrategyGoogleApi from "@/types/e-strategy-google-api";
 import IGetPsiInfo from "@/types/i-get-psi-info";
 // --- todo nath - is this always last preview ??
 // const baseUrl = "https://nathan-krasney-com-five.vercel.app/";
-const baseUrl = "https://nathan-krasney-51hs12604-natankrasney-gmailcom-s-team.vercel.app/"
-// const baseUrl = "https://nathankrasney.com"
+// const baseUrl = "https://nathan-krasney-51hs12604-natankrasney-gmailcom-s-team.vercel.app/"
+const baseUrl = "https://nathankrasney.com"
 
 const tabs: string[] = [
   "/",
@@ -11,8 +11,8 @@ const tabs: string[] = [
   "/contact",
   "/courses",
   "/quiz",
-  // "/testimonials",
-  "/blog",
+  "/testimonials",
+  // "/blog",
   "/events",
 ];
 const catChosen = {
