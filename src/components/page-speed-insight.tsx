@@ -61,15 +61,16 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
       });
   }
 
-  let elemError;
+  let elemError ;
+
   if (err) {
-    elemError = <div>axios error : {err.message} </div>;
+    elemError = <p>axios error : {err.message} </p>;
   }
 
-  let elemLoading;
+  let elemLoading = <p>&nbsp;</p>;// -- to remove layout shift
 
   if (loading) {
-    elemLoading = <div>Loading please wait ........</div>;
+    elemLoading = <p>Loading please wait ........</p>;
   }
 
   const elems = Array.from(roots.values()).map((p) => (

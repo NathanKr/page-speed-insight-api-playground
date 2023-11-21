@@ -12,7 +12,8 @@ const tabs: string[] = [
   "/courses",
   "/quiz",
   "/testimonials",
-  // "/blog",
+  "/blog",
+  "/posts/page-speed-insight-score-automation",
   "/events",
 ];
 const catChosen = {
@@ -21,7 +22,9 @@ const catChosen = {
   bestPractices: true,
   seo: true,
 };
+
 const strategy = StrategyGoogleApi.mobile;
+
 export const infos: IGetPsiInfo[] = tabs.map((tab) => {
   return { pageUrl: `${baseUrl}${tab}`, ...catChosen, strategy };
 });
