@@ -25,8 +25,8 @@ npm run dev
 <ul>
 <li><a href='https://developers.google.com/speed/docs/insights/v5/get-started'>Get started</a></li>
 </ul>
-
-<h2>todo</h2>
+ 
+<h2>todo </h2>
 <ul>
 <li>the test is not compiling</li>
 <li>currently the infos: IGetPsiInfo[] is hard code in data\infos.ts - need some ui to choose it in case this is an external tool</li>
