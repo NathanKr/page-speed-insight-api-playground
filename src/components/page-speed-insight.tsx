@@ -22,9 +22,9 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
 
   useEffect(() => {
     infos.forEach((info, i) => {
-      // use setInterval so google api will get a lot of stuff at once
-      setTimeout(() => {
-        getPsiInfo(info);
+      // use setInterval so google api will not get a lot of stuff at once
+      setTimeout(async () => {
+        await getPsiInfo(info);
       }, i * 3000);
     });
   }, []);
@@ -42,23 +42,27 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     });
   };
 
-  function getPsiInfo(info: IGetPsiInfo) {
+  async function getPsiInfo(info: IGetPsiInfo) {
     const baseApiUrl = "/api/psi";
     const queryString = objectToQueryString(info);
     const url = appendQueryStringToUrl(baseApiUrl, queryString);
 
     setErr(null);
     setLoading(true);
-    axios
-      .get(url)
-      .then((res) => {
-        addNewInfo(res.data.root);
-        setLoading(false);
-      })
-      .catch((err: AxiosError) => {
-        setErr(err);
-        setLoading(false);
-      });
+    try {
+      const response = await axios.get(url);
+      addNewInfo(response.data.root);
+      setLoading(false);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        setErr(axiosError);
+      } else {
+        // Handle non-Axios errors if needed
+        console.error("Non-Axios error:", error);
+      }
+      setLoading(false);
+    }
   }
 
   let elemError ;
