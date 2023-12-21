@@ -20,6 +20,7 @@ const tabs: string[] = [
   "/posts/use-core-web-vitals-for-better-ux-and-google-ranking",
   "/posts/javascript-object-group-by",
   "/posts/server-fake-time-e2e",
+  "/posts/next.js-turbopack",
   "/events",
 ];
 const catChosen = {
