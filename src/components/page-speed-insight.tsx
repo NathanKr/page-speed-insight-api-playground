@@ -5,6 +5,7 @@ import {
   determinePlatform,
   getLocalDateAndTimeNow,
   objectToQueryString,
+  pauseMs,
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
 import React, { FC, useEffect, useState } from "react";
@@ -13,6 +14,8 @@ import styles from "@/styles/page-speed-insight.module.css";
 
 interface IProps {
   infos: IGetPsiInfo[];
+  numRuns: number;
+  delayBetweenRunSec: number;
 }
 
 const PageSpeedInsight: FC<IProps> = ({ infos }) => {
@@ -20,14 +23,13 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    infos.forEach((info, i) => {
-      // use setInterval so google api will not get a lot of stuff at once
-      setTimeout(async () => {
-        await getPsiInfo(info);
-      }, i * 3000);
-    });
-  }, []);
+  async function getInfo() {
+    for (let i = 0; i < infos.length; i++) {
+      const info = infos[i];
+      await getPsiInfo(info);
+      await pauseMs(3000);
+   }
+  }
 
   const addNewInfo = (newInfo: Root) => {
     setRoots((prevRoots) => {
@@ -65,13 +67,13 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
     }
   }
 
-  let elemError ;
+  let elemError;
 
   if (err) {
     elemError = <p>axios error : {err.message} </p>;
   }
 
-  let elemLoading = <p>&nbsp;</p>;// -- to remove layout shift
+  let elemLoading = <p>&nbsp;</p>; // -- to remove layout shift
 
   if (loading) {
     elemLoading = <p>Loading please wait ........</p>;
@@ -109,6 +111,7 @@ const PageSpeedInsight: FC<IProps> = ({ infos }) => {
 
   return (
     <div className={styles.container}>
+      <button onClick={getInfo}>Start</button>
       {elemError}
       {elemLoading}
       {elemTable}

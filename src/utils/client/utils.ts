@@ -46,3 +46,7 @@ export function getLocalDateAndTimeNow(): string {
 export function getLocalDateAndTime(milliseconds: number): string {
   return dayjs(milliseconds).format("DD MMM YY  HH:mm  Z  A");
 }
+
+export function pauseMs(ms : number) : Promise<void>{
+  return new Promise(resolve => setTimeout(()=> resolve(),ms))
+}

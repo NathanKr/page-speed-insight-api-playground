@@ -1,9 +1,6 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
 import PageSpeedInsight from "@/components/page-speed-insight";
-import { infos } from "../../data/infos";
-
-const inter = Inter({ subsets: ["latin"] });
+import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS, infos } from "../../data/infos";
 
 export default function Home() {
   return (
@@ -15,7 +12,11 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <PageSpeedInsight infos={infos} />
+        <PageSpeedInsight
+          numRuns={NUM_RUNS}
+          delayBetweenRunSec={DELAY_BETWEEN_RUN_SEC}
+          infos={infos}
+        />
       </main>
     </>
   );
