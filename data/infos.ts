@@ -9,7 +9,7 @@ const baseUrl = "https://nathankrasney.com"
 
 const tabs: string[] = [
   "/",
-  "/about",
+   "/about",
   "/contact",
   "/courses",
   "/quiz",
@@ -32,8 +32,6 @@ const catChosen = {
 
 const strategy = StrategyGoogleApi.mobile;
 
-export const NUM_RUNS = 2;
-export const DELAY_BETWEEN_RUN_SEC = 30;
 
 export const infos: IGetPsiInfo[] = tabs.map((tab) => {
   return { pageUrl: `${baseUrl}${tab}`, ...catChosen, strategy };

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import PageSpeedInsight from "@/components/page-speed-insight";
-import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS, infos } from "../../data/infos";
+import {  infos } from "../../data/infos";
+import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS } from "@/utils/constants";
 
 export default function Home() {
   return (
