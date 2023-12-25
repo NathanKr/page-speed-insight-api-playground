@@ -1,5 +1,5 @@
 import IGetPsiInfo from "@/types/i-get-psi-info";
-import { Root } from "@/types/types";
+import { Root } from "@/types/google-api-psi-types";
 import {
   appendQueryStringToUrl,
   determinePlatform,
@@ -9,10 +9,14 @@ import {
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
 import React, { FC, useState } from "react";
-import PsiScore from "./psi-score";
+import PsiScoreTableRow from "./psi-score-table-row";
 import styles from "@/styles/page-speed-insight.module.css";
 import { PAUSE_BETWEEN_API_MS } from "@/utils/constants";
 import RunStatus from "@/types/e-run-status";
+import { PsiUrl2RootsMap } from "@/types/types";
+import PsiScoreStatTableRow from "./psi-score-stat-table-row";
+import IStat from "@/types/i-stat";
+import { mean, std } from "mathjs";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -25,14 +29,14 @@ const PageSpeedInsight: FC<IProps> = ({
   numRuns,
   delayBetweenRunSec,
 }) => {
-  const [roots, setRoots] = useState<Map<string, Root[]>>(new Map());
+  const [psiRoots, setPsiRoots] = useState<PsiUrl2RootsMap>(new Map());
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
   const [runStatus, setRunStatus] = useState(RunStatus.notStarted);
 
-  async function getInfo() {
-    setRoots(new Map());
+  async function getInfo(): Promise<void> {
+    setPsiRoots(new Map());
     setErr(null);
     setLoading(false);
     setCurrentRun(0);
@@ -50,14 +54,14 @@ const PageSpeedInsight: FC<IProps> = ({
     setRunStatus(RunStatus.completed);
   }
 
-  const addNewInfo = (newInfo: Root) => {
-    setRoots((prevRoots) => {
+  const addNewInfo = (newInfo: Root): void => {
+    setPsiRoots((prevRoots) => {
       // Use the spread operator to create a new Map with the previous items
       const updatedRoots = new Map(prevRoots);
       const key = newInfo.lighthouseResult.requestedUrl;
       let updatedValue = updatedRoots.get(key);
       if (updatedValue) {
-        // Create a new array with the updated value --> strange results without this 
+        // Create a new array with the updated value --> strange results without this
         updatedValue = [...updatedValue, newInfo];
 
         // Add the new item to the Map using its ID as the key
@@ -71,7 +75,7 @@ const PageSpeedInsight: FC<IProps> = ({
     });
   };
 
-  async function getPsiInfo(info: IGetPsiInfo) {
+  async function getPsiInfo(info: IGetPsiInfo): Promise<void> {
     const baseApiUrl = "/api/psi";
     const queryString = objectToQueryString(info);
     const url = appendQueryStringToUrl(baseApiUrl, queryString);
@@ -108,19 +112,32 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   let id = 0;
-  const elems = Array.from(roots.values()).map((roots) =>
-    roots.map((root) => {
+  const elems = Array.from(psiRoots.values()).map((roots) => {
+    const elements = roots.map((root) => {
       id++;
       return (
-        <PsiScore
+        <PsiScoreTableRow
           key={id}
           strategy={determinePlatform(root.lighthouseResult.requestedUrl)}
           cat={root.lighthouseResult.categories}
           url={root.lighthouseResult.requestedUrl}
         />
       );
-    })
-  );
+    });
+
+    if (runStatus == RunStatus.completed) {
+      const arPerformance: number[] = roots.map(
+        (root) => root.lighthouseResult.categories.performance.score
+      );
+      const performance: IStat = {
+        avg: mean(arPerformance),
+        std: std(...arPerformance)
+      };
+      elements.push(<PsiScoreStatTableRow performance={performance} />);
+    }
+
+    return elements;
+  });
 
   const elemTable = (
     <table>
@@ -148,8 +165,8 @@ const PageSpeedInsight: FC<IProps> = ({
       <p>
         run {currentRun} / {numRuns}
       </p>
-      <p>PAUSE_BETWEEN_API_MS : {PAUSE_BETWEEN_API_MS}</p>
-      <p>delayBetweenRunSec : {delayBetweenRunSec}</p>
+      <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
+      <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
       <button disabled={runStatus == RunStatus.started} onClick={getInfo}>
         Start
       </button>
