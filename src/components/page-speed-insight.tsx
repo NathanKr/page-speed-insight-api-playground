@@ -8,15 +8,16 @@ import {
   pauseMs,
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import PsiScoreTableRow from "./psi-score-table-row";
 import styles from "@/styles/page-speed-insight.module.css";
-import { PAUSE_BETWEEN_API_MS } from "@/utils/constants";
+import { PAUSE_BETWEEN_API_MS } from "@/utils/client/constants";
 import RunStatus from "@/types/e-run-status";
 import { PsiUrl2RootsMap } from "@/types/types";
 import PsiScoreStatTableRow from "./psi-score-stat-table-row";
 import IStat from "@/types/i-stat";
 import { mean, std } from "mathjs";
+import InternalApiUrl from "@/types/e-internal-api-url";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -34,6 +35,19 @@ const PageSpeedInsight: FC<IProps> = ({
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
   const [runStatus, setRunStatus] = useState(RunStatus.notStarted);
+
+  async function saveHtmlOnDisk() {
+    const htmlContent = document.documentElement.outerHTML;
+    try {
+      const response = await axios.post(InternalApiUrl.savePage, {
+        htmlContent,
+      });
+      console.log(response.data);
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      console.error("Error sending HTML:", axiosError.message);
+    }
+  }
 
   async function getInfo(): Promise<void> {
     setPsiRoots(new Map());
@@ -76,7 +90,7 @@ const PageSpeedInsight: FC<IProps> = ({
   };
 
   async function getPsiInfo(info: IGetPsiInfo): Promise<void> {
-    const baseApiUrl = "/api/psi";
+    const baseApiUrl = InternalApiUrl.psi;
     const queryString = objectToQueryString(info);
     const url = appendQueryStringToUrl(baseApiUrl, queryString);
 
@@ -131,7 +145,7 @@ const PageSpeedInsight: FC<IProps> = ({
       );
       const performance: IStat = {
         avg: mean(arPerformance),
-        std: std(...arPerformance)
+        std: std(...arPerformance),
       };
       elements.push(<PsiScoreStatTableRow performance={performance} />);
     }
@@ -169,6 +183,13 @@ const PageSpeedInsight: FC<IProps> = ({
       <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
       <button disabled={runStatus == RunStatus.started} onClick={getInfo}>
         Start
+      </button>
+      <br />
+      <button
+        disabled={runStatus == RunStatus.started}
+        onClick={saveHtmlOnDisk}
+      >
+        Save html to file
       </button>
       {elemComplete}
       {elemError}

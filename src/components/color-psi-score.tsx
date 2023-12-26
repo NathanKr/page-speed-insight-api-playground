@@ -9,15 +9,17 @@ interface IProps {
   score: number;
   as: keyof JSX.IntrinsicElements;
 }
+
+function getClassName(scoreFixedNumber : number): string {
+  if (scoreFixedNumber >= BEST_SCORE_LOW_LIMIT) return styles.best;
+  if (scoreFixedNumber >= MEDIUM_SCORE_LOW_LIMIT) return styles.middle;
+  return styles.worst;
+}
+
 const ColorPsiScore: FC<IProps> = ({ score, as: Element }) => {
   const scoreFixed = score.toFixed(2);
   const scoreFixedNumber = parseFloat(scoreFixed);
-  function getClassName(): string {
-    if (scoreFixedNumber >= BEST_SCORE_LOW_LIMIT) return styles.best;
-    if (scoreFixedNumber >= MEDIUM_SCORE_LOW_LIMIT) return styles.middle;
-    return styles.worst;
-  }
 
-  return <Element className={getClassName()}>{scoreFixed}</Element>
+  return <Element className={getClassName(scoreFixedNumber)}>{scoreFixed}</Element>
 };
 export default ColorPsiScore;
