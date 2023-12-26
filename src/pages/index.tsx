@@ -1,9 +1,25 @@
 import Head from "next/head";
 import PageSpeedInsight from "@/components/page-speed-insight";
-import {  infos } from "../../data/infos";
+import { infos } from "../../data/infos";
 import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS } from "@/utils/constants";
 
+const debug = true;
+
 export default function Home() {
+  const elemPsi = debug ? (
+    <PageSpeedInsight
+      numRuns={2}
+      delayBetweenRunSec={1000}
+      infos={infos.slice(0, 3)}
+    />
+  ) : (
+    <PageSpeedInsight
+      numRuns={NUM_RUNS}
+      delayBetweenRunSec={DELAY_BETWEEN_RUN_SEC}
+      infos={infos}
+    />
+  );
+
   return (
     <>
       <Head>
@@ -12,13 +28,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <PageSpeedInsight
-          numRuns={NUM_RUNS}
-          delayBetweenRunSec={DELAY_BETWEEN_RUN_SEC}
-          infos={infos}
-        />
-      </main>
+      <main>{elemPsi}</main>
     </>
   );
 }
