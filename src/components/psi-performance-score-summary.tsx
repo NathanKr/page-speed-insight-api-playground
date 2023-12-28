@@ -1,36 +1,33 @@
 import React, { FC } from "react";
-import ScoreUrl from "./score-url";
 import { getPerformanceStatSummary } from "@/utils/client/performance-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import ColorPsiScore from "./color-psi-score";
+import ScoreUrls from "./score-urls";
 
 interface IProps {
   psiUrl2FromRootsMap: PsiUrl2FromRootsMap;
 }
 
-
 const PsiPerformanceScoreSummary: FC<IProps> = ({ psiUrl2FromRootsMap }) => {
   const performanceScore = getPerformanceStatSummary(psiUrl2FromRootsMap);
-
-  const elemLow = performanceScore.low.map((it,i) => (
-    <ScoreUrl key={i} score={it.score} url={it.url} />
-  ));
-  const elemHigh = performanceScore.high.map((it,i) => (
-    <ScoreUrl key={i} score={it.score} url={it.url} />
-  ));
 
   return (
     <>
       <h3>performance score summary</h3>
       <p>
-        avg : <ColorPsiScore score={performanceScore.avgScore!} as={"span"}/> , std : {performanceScore.stdScore}
+        <h4>Avg :</h4>{" "}
+        <ColorPsiScore score={performanceScore.avgScore!} as={"span"} /> ,
+        <h4>Std :</h4> {performanceScore.stdScore}
       </p>
-      <p>low : {elemLow}</p>
-      <p>high : {elemHigh}</p>
+      <p>
+        <h4>Low :</h4> <ScoreUrls scoreUrls={performanceScore.low} />
+      </p>
+      <p>
+        <h4>High :</h4>
+        <ScoreUrls scoreUrls={performanceScore.high} />
+      </p>
     </>
   );
 };
-
-
 
 export default PsiPerformanceScoreSummary;

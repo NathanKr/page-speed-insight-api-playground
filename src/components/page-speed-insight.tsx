@@ -19,6 +19,8 @@ import { convert, getPerformanceStat } from "@/utils/client/performance-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
+import ISavePageRequestBody from "@/types/i-save-page-request-body";
+import ISavePageResponseData from "@/types/i-save-page-response-data";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -34,19 +36,22 @@ const PageSpeedInsight: FC<IProps> = ({
   const [psiFromRoots, setPsiFromRoots] = useState<PsiUrl2FromRootsMap>(
     new Map()
   );
-
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
   const [runStatus, setRunStatus] = useState(RunStatus.notStarted);
+  const [savePageResponseData, setSavePageResponseData] =
+    useState<ISavePageResponseData | null>(null);
 
   async function saveHtmlOnDisk() {
-    const htmlContent = document.documentElement.outerHTML;
+    const body: ISavePageRequestBody = {
+      htmlContent: document.documentElement.outerHTML,
+    };
     try {
       const response = await axios.post(InternalApiUrl.savePage, {
-        htmlContent,
+        ...body,
       });
-      console.log(response.data);
+      setSavePageResponseData(response.data as ISavePageResponseData);
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error("Error sending HTML:", axiosError.message);
@@ -54,11 +59,7 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   async function getInfo(): Promise<void> {
-    setPsiFromRoots(new Map());
-    setErr(null);
-    setLoading(false);
-    setCurrentRun(0);
-    setRunStatus(RunStatus.started);
+    initState();
 
     for (let iRun = 0; iRun < numRuns; iRun++) {
       setCurrentRun(iRun + 1);
@@ -94,6 +95,15 @@ const PageSpeedInsight: FC<IProps> = ({
       return updatedRoots;
     });
   };
+
+  function initState() {
+    setPsiFromRoots(new Map());
+    setErr(null);
+    setLoading(false);
+    setCurrentRun(0);
+    setRunStatus(RunStatus.started);
+    setSavePageResponseData(null);
+  }
 
   async function getPsiInfo(info: IGetPsiInfo): Promise<void> {
     const baseApiUrl = InternalApiUrl.psi;
@@ -164,13 +174,11 @@ const PageSpeedInsight: FC<IProps> = ({
     </table>
   );
 
-  let elemComplete;
+  let elemCompleteTime, elemCompleteSummary;
   if (runStatus == RunStatus.completed) {
-    elemComplete = (
-      <>
-        <p>completed : {getLocalDateAndTimeNow()}</p>
-        <PsiPerformanceScoreSummary psiUrl2FromRootsMap={psiFromRoots} />
-      </>
+    elemCompleteTime = <p>completed : {getLocalDateAndTimeNow()}</p>;
+    elemCompleteSummary = (
+      <PsiPerformanceScoreSummary psiUrl2FromRootsMap={psiFromRoots} />
     );
   }
 
@@ -185,13 +193,17 @@ const PageSpeedInsight: FC<IProps> = ({
         Start
       </button>
       <br />
+      {elemCompleteTime}
       <button
         disabled={runStatus == RunStatus.started}
         onClick={saveHtmlOnDisk}
       >
         Save html to file
       </button>
-      {elemComplete}
+      {savePageResponseData && (
+        <p>file path : {savePageResponseData.filePath}</p>
+      )}
+      {elemCompleteSummary}
       {elemError}
       {elemLoading}
       {elemTable}
