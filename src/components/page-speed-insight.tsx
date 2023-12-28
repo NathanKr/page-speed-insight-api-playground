@@ -2,22 +2,23 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 import { Root } from "@/types/google-api-psi-types";
 import {
   appendQueryStringToUrl,
-  determinePlatform,
   getLocalDateAndTimeNow,
   objectToQueryString,
   pauseMs,
 } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import PsiScoreTableRow from "./psi-score-table-row";
 import styles from "@/styles/page-speed-insight.module.css";
 import { PAUSE_BETWEEN_API_MS } from "@/utils/client/constants";
 import RunStatus from "@/types/e-run-status";
-import { PsiUrl2RootsMap } from "@/types/types";
 import PsiScoreStatTableRow from "./psi-score-stat-table-row";
 import IStat from "@/types/i-stat";
-import { mean, std } from "mathjs";
 import InternalApiUrl from "@/types/e-internal-api-url";
+import { convert, getPerformanceStat } from "@/utils/client/performance-utils";
+import { PsiUrl2FromRootsMap } from "@/types/types";
+import IFromRoot from "@/types/i-from-root";
+import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -30,7 +31,10 @@ const PageSpeedInsight: FC<IProps> = ({
   numRuns,
   delayBetweenRunSec,
 }) => {
-  const [psiRoots, setPsiRoots] = useState<PsiUrl2RootsMap>(new Map());
+  const [psiFromRoots, setPsiFromRoots] = useState<PsiUrl2FromRootsMap>(
+    new Map()
+  );
+
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
@@ -50,7 +54,7 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   async function getInfo(): Promise<void> {
-    setPsiRoots(new Map());
+    setPsiFromRoots(new Map());
     setErr(null);
     setLoading(false);
     setCurrentRun(0);
@@ -68,11 +72,13 @@ const PageSpeedInsight: FC<IProps> = ({
     setRunStatus(RunStatus.completed);
   }
 
-  const addNewInfo = (newInfo: Root): void => {
-    setPsiRoots((prevRoots) => {
+  const addNewInfo = (newInfoRoot: Root): void => {
+    const newInfo: IFromRoot = convert(newInfoRoot);
+
+    setPsiFromRoots((prevRoots) => {
       // Use the spread operator to create a new Map with the previous items
       const updatedRoots = new Map(prevRoots);
-      const key = newInfo.lighthouseResult.requestedUrl;
+      const key = newInfoRoot.lighthouseResult.requestedUrl;
       let updatedValue = updatedRoots.get(key);
       if (updatedValue) {
         // Create a new array with the updated value --> strange results without this
@@ -126,27 +132,16 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   let id = 0;
-  const elems = Array.from(psiRoots.values()).map((roots) => {
-    const elements = roots.map((root) => {
+  const elems = Array.from(psiFromRoots.entries()).map((entry) => {
+    let url = entry[0];
+    let fromRoots = entry[1];
+    const elements = fromRoots.map((fromRoot) => {
       id++;
-      return (
-        <PsiScoreTableRow
-          key={id}
-          strategy={determinePlatform(root.lighthouseResult.requestedUrl)}
-          cat={root.lighthouseResult.categories}
-          url={root.lighthouseResult.requestedUrl}
-        />
-      );
+      return <PsiScoreTableRow key={id} fromRoot={fromRoot} url={url} />;
     });
 
     if (runStatus == RunStatus.completed) {
-      const arPerformance: number[] = roots.map(
-        (root) => root.lighthouseResult.categories.performance.score
-      );
-      const performance: IStat = {
-        avg: mean(arPerformance),
-        std: std(...arPerformance),
-      };
+      const performance: IStat = getPerformanceStat(fromRoots);
       elements.push(<PsiScoreStatTableRow performance={performance} />);
     }
 
@@ -171,7 +166,12 @@ const PageSpeedInsight: FC<IProps> = ({
 
   let elemComplete;
   if (runStatus == RunStatus.completed) {
-    elemComplete = <p>completed : {getLocalDateAndTimeNow()}</p>;
+    elemComplete = (
+      <>
+        <p>completed : {getLocalDateAndTimeNow()}</p>
+        <PsiPerformanceScoreSummary psiUrl2FromRootsMap={psiFromRoots} />
+      </>
+    );
   }
 
   return (

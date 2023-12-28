@@ -1,27 +1,27 @@
-import { Categories } from "@/types/google-api-psi-types";
 import React, { FC } from "react";
-import StrategyGoogleApi from "@/types/e-strategy-google-api";
 import ColorPsiScore from "./color-psi-score";
+import IFromRoot from "@/types/i-from-root";
 
 interface IProps {
-  cat: Categories;
   url: string;
-  strategy: StrategyGoogleApi;
+  fromRoot: IFromRoot;
 }
 
-function getTdScore(score: number) {
-  return <ColorPsiScore score={score} as="td" />;
+function getTdScore(score: number | undefined) {
+  return score ? <ColorPsiScore score={score} as="td" /> : <td></td>;
 }
 
-const PsiScoreTableRow: FC<IProps> = ({ cat, url, strategy }) => {
+const PsiScoreTableRow: FC<IProps> = ({ fromRoot, url }) => {
+  const { strategy } = fromRoot;
+  const { performance, seo, bestPractices, accessibility } = fromRoot.score;
   return (
     <tr>
       <td>{url}</td>
       <td>{strategy}</td>
-      {getTdScore(cat.performance.score)}
-      {getTdScore(cat.seo.score)}
-      {getTdScore(cat["best-practices"].score)}
-      {getTdScore(cat.accessibility.score)}
+      {getTdScore(performance)}
+      {getTdScore(seo)}
+      {getTdScore(bestPractices)}
+      {getTdScore(accessibility)}
     </tr>
   );
 };

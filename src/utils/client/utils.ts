@@ -1,5 +1,5 @@
 import StrategyGoogleApi from "@/types/e-strategy-google-api";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 
 export function objectToQueryString(obj: Record<string, any>): string {
   const queryString = Object.keys(obj)
@@ -28,26 +28,18 @@ export function appendQueryStringToUrl(
   return fullUrl;
 }
 
-export const determinePlatform = (url: string): StrategyGoogleApi => {
-  // Your logic to determine if the URL is for a mobile or desktop version
-  // You might use regex, string matching, or any other criteria specific to your URLs
-  if (url.includes(`&strategy=${StrategyGoogleApi.desktop}`)) {
-    return StrategyGoogleApi.desktop;
-  } else {
-    return StrategyGoogleApi.mobile;
-  }
-};
+
 
 export function getLocalDateAndTimeNow(): string {
   const now = new Date();
   const milliseconds = now.getTime();
-    return getLocalDateAndTime(milliseconds);
+  return getLocalDateAndTime(milliseconds);
 }
 
 export function getLocalDateAndTime(milliseconds: number): string {
   return dayjs(milliseconds).format("DD MMM YY  HH:mm  Z  A");
 }
 
-export function pauseMs(ms : number) : Promise<void>{
-  return new Promise(resolve => setTimeout(()=> resolve(),ms))
+export function pauseMs(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(() => resolve(), ms));
 }

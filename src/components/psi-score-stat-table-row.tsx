@@ -1,6 +1,7 @@
 import IStat from "@/types/i-stat";
 import { FC, ReactElement } from "react";
 import ColorPsiScore from "./color-psi-score";
+import { limitToTwoDecimalPlaces } from "@/utils/client/performance-utils";
 
 interface IProps {
   performance: IStat;
@@ -15,7 +16,7 @@ function getTdStat(stat?: IStat): ReactElement {
       {stat && (
         <>
           Avg : <ColorPsiScore score={stat.avg} as="span" /> , Std :
-          {stat.std.toFixed(2)}
+          {limitToTwoDecimalPlaces(stat.std)}
         </>
       )}
     </td>

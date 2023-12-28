@@ -1,3 +1,3 @@
-import { Root } from "./google-api-psi-types";
+import IFromRoot from "./i-from-root";
 
-export type PsiUrl2RootsMap = Map<string, Root[]>;
+export type PsiUrl2FromRootsMap = Map<string, IFromRoot[]>;
