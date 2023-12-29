@@ -15,9 +15,8 @@ const PsiPerformanceScoreSummary: FC<IProps> = ({ psiUrl2FromRootsMap }) => {
     <>
       <h3>performance score summary</h3>
       <p>
-        <h4>Avg :</h4>{" "}
-        <ColorPsiScore score={performanceScore.avgScore!} as={"span"} /> ,
-        <h4>Std :</h4> {performanceScore.stdScore}
+        <h4>Avg : <ColorPsiScore score={performanceScore.avgScore!} as={"span"} /> </h4>
+        <h4>Std : {performanceScore.stdScore}</h4> 
       </p>
       <p>
         <h4>Low :</h4> <ScoreUrls scoreUrls={performanceScore.low} />

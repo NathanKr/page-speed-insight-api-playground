@@ -1,4 +1,3 @@
-import StrategyGoogleApi from "@/types/e-strategy-google-api";
 import dayjs from "dayjs";
 
 export function objectToQueryString(obj: Record<string, any>): string {
