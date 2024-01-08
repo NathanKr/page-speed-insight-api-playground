@@ -4,12 +4,11 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 // const baseUrl = "https://nathan-krasney-iex9gkios-natankrasney-gmailcom-s-team.vercel.app/"
 //  const baseUrl = "https://nathan-krasney-7xtfq4ese-natankrasney-gmailcom-s-team.vercel.app"
 // const baseUrl = "https://nathan-krasney-jfwafu53e-natankrasney-gmailcom-s-team.vercel.app"
-const baseUrl = "https://nathankrasney.com"
-
+ const baseUrl = "https://nathankrasney.com";
 
 const tabs: string[] = [
   "/",
-   "/about",
+  "/about",
   "/contact",
   "/courses",
   "/quiz",
@@ -21,6 +20,8 @@ const tabs: string[] = [
   "/posts/javascript-object-group-by",
   "/posts/server-fake-time-e2e",
   "/posts/next.js-turbopack",
+  "/posts/what-is-postcss",
+  "/posts/reduce-css-file-size-for-better-performance",
   "/events",
 ];
 const catChosen = {
@@ -31,7 +32,6 @@ const catChosen = {
 };
 
 const strategy = StrategyGoogleApi.mobile;
-
 
 export const infos: IGetPsiInfo[] = tabs.map((tab) => {
   return { pageUrl: `${baseUrl}${tab}`, ...catChosen, strategy };
