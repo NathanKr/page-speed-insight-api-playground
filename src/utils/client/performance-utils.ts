@@ -48,13 +48,9 @@ export function getPerformanceStatSummary(
 
     const arStats: IStat[] = Array.from(urlToPerformanceScoreAvgMap.values());
     const arAvg = arStats.map((it) => it.avg);
-    performanceScore.avgScore = limitToTwoDecimalPlaces(
-      mean(arAvg)
-    );
-  
-    performanceScore.stdScore = limitToTwoDecimalPlaces(
-      std(...arAvg)
-    );
+    performanceScore.avgScore = limitToTwoDecimalPlaces(mean(arAvg));
+
+    performanceScore.stdScore = limitToTwoDecimalPlaces(std(...arAvg));
 
     const lowScorePerformanceLimited = limitToTwoDecimalPlaces(min(arAvg));
     const highScorePerformanceLimited = limitToTwoDecimalPlaces(max(arAvg));
@@ -76,10 +72,6 @@ export function getPerformanceStatSummary(
         performanceScore.high.push(scoreUrl);
       }
     });
-
-
-
-
   } catch (err) {
     performanceScore = makeDefaultIScoreSummary();
     console.error(err);
@@ -106,6 +98,7 @@ export function convert(newInfoRoot: Root): IFromRoot {
   const newInfo: IFromRoot = {
     score,
     strategy: determinePlatform(newInfoRoot.lighthouseResult.requestedUrl),
+    audits: newInfoRoot.lighthouseResult.audits,
   };
   return newInfo;
 }

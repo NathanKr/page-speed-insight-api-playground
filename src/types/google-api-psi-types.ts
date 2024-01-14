@@ -2,7 +2,8 @@ export interface Root {
   captchaResult: string
   kind: string
   id: string
-  loadingExperience: LoadingExperience
+  // --- loadingExperience : i was able to get info for popular websites not mine
+  loadingExperience: LoadingExperience 
   originLoadingExperience: OriginLoadingExperience
   lighthouseResult: LighthouseResult
   analysisUTCTimestamp: string

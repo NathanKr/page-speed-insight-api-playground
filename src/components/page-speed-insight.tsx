@@ -39,6 +39,7 @@ const PageSpeedInsight: FC<IProps> = ({
   const [err, setErr] = useState<AxiosError | null>(null);
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
+  const [currentPage, setCurrentRunPage] = useState(0);
   const [runStatus, setRunStatus] = useState(RunStatus.notStarted);
   const [savePageResponseData, setSavePageResponseData] =
     useState<ISavePageResponseData | null>(null);
@@ -64,6 +65,7 @@ const PageSpeedInsight: FC<IProps> = ({
     for (let iRun = 0; iRun < numRuns; iRun++) {
       setCurrentRun(iRun + 1);
       for (let iPage = 0; iPage < infos.length; iPage++) {
+        setCurrentRunPage(iPage+1)
         const info = infos[iPage];
         await getPsiInfo(info);
         await pauseMs(PAUSE_BETWEEN_API_MS);
@@ -74,7 +76,9 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   const addNewInfo = (newInfoRoot: Root): void => {
+    // console.log(newInfoRoot)
     const newInfo: IFromRoot = convert(newInfoRoot);
+    console.log(newInfoRoot.lighthouseResult.audits)
 
     setPsiFromRoots((prevRoots) => {
       // Use the spread operator to create a new Map with the previous items
@@ -187,6 +191,7 @@ const PageSpeedInsight: FC<IProps> = ({
       <p>
         run {currentRun} / {numRuns}
       </p>
+      <p>page {currentPage}/{infos.length}</p>
       <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
       <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
       <button disabled={runStatus == RunStatus.started} onClick={getInfo}>
