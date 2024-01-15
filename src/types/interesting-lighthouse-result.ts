@@ -1,3 +1,4 @@
+// --- CAUTION : string should match name in psiAuditsKeys
 enum InterestingLighthouseResult {
   score = "score",
   cls = "cls",
@@ -6,6 +7,7 @@ enum InterestingLighthouseResult {
   nrtt = "nrtt",
   nsl = "nsl",
   rbr = "rbr",
+  si = "si",
   srt = "srt",
   tbt = "tbt",
 }
