@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styles from "@/styles/color-psi-score.module.css";
-import { limitToTwoDecimalPlaces } from "@/utils/client/performance-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 
 // range is   0–49 : red , 50–89 : orange , 90–100 : green
 const BEST_SCORE_LOW_LIMIT = 0.9;

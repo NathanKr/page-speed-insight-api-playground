@@ -1,72 +1,118 @@
-import StrategyGoogleApi from "@/types/e-strategy-google-api";
-import { Root } from "@/types/google-api-psi-types";
 import IFromRoot from "@/types/i-from-root";
-import { IPsiScore } from "@/types/i-psi-score";
-import IScoreSummary from "@/types/i-score-summary";
-import IScoreUrl from "@/types/i-score-url";
+import IResultSummary from "@/types/i-result-summary";
+import IResultUrl from "@/types/i-result-url";
 import IStat from "@/types/i-stat";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import { max, mean, min, std } from "mathjs";
+import { limitToTwoDecimalPlaces } from "./psi-utils";
+import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
+import { psiAuditsKeys } from "./audit-utils";
+import IPsiAuditsKey from "@/types/i-psi-audit-key";
+import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
 
-export function getPerformanceArray(roots: IFromRoot[]): number[] {
+function getInterestingLighthouseResultValue(
+  resultMetaData: IInterestingLighthouseResultType,
+  root: IFromRoot
+): number {
+  const { type } = resultMetaData;
+
+  // --- isScore not reevant for score
+  if (type == InterestingLighthouseResult.score) return root.score.performance!;
+
+  // -- expect audit
+  const obj: IPsiAuditsKey | undefined = psiAuditsKeys.find(
+    (it) => it.name == type
+  );
+
+  if (obj) {
+    const audit = root.audits[obj.key];
+    return isScoreWithOverride(resultMetaData) ? audit.score : audit.numericValue;
+  }
+
+  throw new Error(`type not matched : ${type}`);
+}
+
+function getInterestingLighthouseResultArray(
+  resultMetaData: IInterestingLighthouseResultType,
+  roots: IFromRoot[]
+): number[] {
   return roots.map((root) => {
-    return root.score.performance!;
+    return getInterestingLighthouseResultValue(resultMetaData, root);
   });
 }
 
-export function getPerformanceStat(roots: IFromRoot[]): IStat {
-  const arPerformance: number[] = getPerformanceArray(roots);
-  const performanceStat: IStat = {
-    avg: mean(arPerformance),
-    std: std(...arPerformance),
+export function getInterestingLighthouseResultStat(
+  resultMetaData: IInterestingLighthouseResultType,
+  roots: IFromRoot[]
+): IStat {
+  const arInterestingResults: number[] = getInterestingLighthouseResultArray(
+    resultMetaData,
+    roots
+  );
+  const interestingStat: IStat = {
+    avg: mean(arInterestingResults),
+    std: std(...arInterestingResults),
   };
 
-  return performanceStat;
+  return interestingStat;
 }
 
-function makeDefaultIScoreSummary(): IScoreSummary {
-  const performanceScore: IScoreSummary = {
-    avgScore: null,
-    stdScore: null,
+function makeDefaultIScoreSummary(): IResultSummary {
+  const performanceScore: IResultSummary = {
+    avgResult: null,
+    stdResult: null,
     low: [],
     high: [],
   };
   return performanceScore;
 }
 
-export function getPerformanceStatSummary(
+/**
+ * This is the summary of all sample on all pages
+ * @param psiUrl2FromRootsMap
+ * @returns
+ */
+export function getInterestingLighthouseResultStatSummary(
+  resultMetaData: IInterestingLighthouseResultType,
   psiUrl2FromRootsMap: PsiUrl2FromRootsMap
-): IScoreSummary {
+): IResultSummary {
   let performanceScore = makeDefaultIScoreSummary();
 
   try {
     const urlToPerformanceScoreAvgMap: Map<string, IStat> = new Map();
     psiUrl2FromRootsMap.forEach((psiRoots, url) => {
-      const performanceStat: IStat = getPerformanceStat(psiRoots);
-      urlToPerformanceScoreAvgMap.set(url, performanceStat);
+      const interestingStat: IStat = getInterestingLighthouseResultStat(
+        resultMetaData,
+        psiRoots
+      );
+      urlToPerformanceScoreAvgMap.set(url, interestingStat);
     });
 
     const arStats: IStat[] = Array.from(urlToPerformanceScoreAvgMap.values());
     const arAvg = arStats.map((it) => it.avg);
-    performanceScore.avgScore = limitToTwoDecimalPlaces(mean(arAvg));
+    performanceScore.avgResult = limitToTwoDecimalPlaces(mean(arAvg));
 
-    performanceScore.stdScore = limitToTwoDecimalPlaces(std(...arAvg));
+    performanceScore.stdResult = limitToTwoDecimalPlaces(std(...arAvg));
 
     const lowScorePerformanceLimited = limitToTwoDecimalPlaces(min(arAvg));
     const highScorePerformanceLimited = limitToTwoDecimalPlaces(max(arAvg));
 
     urlToPerformanceScoreAvgMap.forEach((stat, url) => {
       const avgLimited = limitToTwoDecimalPlaces(stat.avg);
+      const isScore = isScoreWithOverride(resultMetaData);
+
       if (avgLimited == lowScorePerformanceLimited) {
-        const scoreUrl: IScoreUrl = {
-          score: avgLimited,
+        const scoreUrl: IResultUrl = {
+          isScore,
+          result: avgLimited,
           url,
         };
         performanceScore.low.push(scoreUrl);
       }
       if (avgLimited == highScorePerformanceLimited) {
-        const scoreUrl: IScoreUrl = {
-          score: avgLimited,
+        const scoreUrl: IResultUrl = {
+          isScore,
+          result: avgLimited,
           url,
         };
         performanceScore.high.push(scoreUrl);
@@ -80,35 +126,9 @@ export function getPerformanceStatSummary(
   return performanceScore;
 }
 
-export function limitToTwoDecimalPlaces(num: number): number {
-  // Round the number to two decimal places
-  let roundedNumber: number = parseFloat(num.toFixed(2));
+function isScoreWithOverride(resultMetaData: IInterestingLighthouseResultType): boolean {
+  const { _isScore, type } = resultMetaData;
+  if (type == InterestingLighthouseResult.score) return true; // decide by type
 
-  return roundedNumber;
+  return _isScore!;
 }
-
-export function convert(newInfoRoot: Root): IFromRoot {
-  const cat = newInfoRoot.lighthouseResult.categories;
-  const score: IPsiScore = {
-    performance: cat.performance.score,
-    accessibility: cat.accessibility.score,
-    bestPractices: cat["best-practices"].score,
-    seo: cat.seo.score,
-  };
-  const newInfo: IFromRoot = {
-    score,
-    strategy: determinePlatform(newInfoRoot.lighthouseResult.requestedUrl),
-    audits: newInfoRoot.lighthouseResult.audits,
-  };
-  return newInfo;
-}
-
-export const determinePlatform = (url: string): StrategyGoogleApi => {
-  // Your logic to determine if the URL is for a mobile or desktop version
-  // You might use regex, string matching, or any other criteria specific to your URLs
-  if (url.includes(`&strategy=${StrategyGoogleApi.desktop}`)) {
-    return StrategyGoogleApi.desktop;
-  } else {
-    return StrategyGoogleApi.mobile;
-  }
-};

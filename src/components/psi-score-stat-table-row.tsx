@@ -1,7 +1,7 @@
 import IStat from "@/types/i-stat";
 import { FC, ReactElement } from "react";
 import ColorPsiScore from "./color-psi-score";
-import { limitToTwoDecimalPlaces } from "@/utils/client/performance-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 
 interface IProps {
   performance: IStat;

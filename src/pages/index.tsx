@@ -3,7 +3,7 @@ import PageSpeedInsight from "@/components/page-speed-insight";
 import { infos } from "../../data/infos";
 import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS } from "@/utils/client/constants";
 
-const debug = false;
+const debug = true;
 
 export default function Home() {
   const elemPsi = debug ? (

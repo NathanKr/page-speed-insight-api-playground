@@ -1,6 +1,7 @@
 import IPsiAuditsKey from "@/types/i-psi-audit-key";
 
-export const psiAuditsKeys: IPsiAuditsKey[] = [
+export const psiAuditsKeys: IPsiAuditsKey[] =
+ [
   {
     key: "cumulative-layout-shift",
     name: "cls",

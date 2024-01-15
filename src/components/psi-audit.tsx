@@ -1,5 +1,5 @@
 import IPsiAudit from "@/types/i-psi-audit";
-import { limitToTwoDecimalPlaces } from "@/utils/client/performance-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 import { FC } from "react";
 
 interface IProps {

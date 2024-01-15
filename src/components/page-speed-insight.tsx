@@ -15,12 +15,15 @@ import RunStatus from "@/types/e-run-status";
 import PsiScoreStatTableRow from "./psi-score-stat-table-row";
 import IStat from "@/types/i-stat";
 import InternalApiUrl from "@/types/e-internal-api-url";
-import { convert, getPerformanceStat } from "@/utils/client/performance-utils";
+import { convert } from "@/utils/client/psi-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
+import { getInterestingLighthouseResultStat } from "@/utils/client/performance-utils";
+import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
+import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -65,7 +68,7 @@ const PageSpeedInsight: FC<IProps> = ({
     for (let iRun = 0; iRun < numRuns; iRun++) {
       setCurrentRun(iRun + 1);
       for (let iPage = 0; iPage < infos.length; iPage++) {
-        setCurrentRunPage(iPage+1)
+        setCurrentRunPage(iPage + 1);
         const info = infos[iPage];
         await getPsiInfo(info);
         await pauseMs(PAUSE_BETWEEN_API_MS);
@@ -78,7 +81,7 @@ const PageSpeedInsight: FC<IProps> = ({
   const addNewInfo = (newInfoRoot: Root): void => {
     // console.log(newInfoRoot)
     const newInfo: IFromRoot = convert(newInfoRoot);
-    console.log(newInfoRoot.lighthouseResult.audits)
+    console.log(newInfoRoot.lighthouseResult.audits);
 
     setPsiFromRoots((prevRoots) => {
       // Use the spread operator to create a new Map with the previous items
@@ -155,7 +158,13 @@ const PageSpeedInsight: FC<IProps> = ({
     });
 
     if (runStatus == RunStatus.completed) {
-      const performance: IStat = getPerformanceStat(fromRoots);
+      const resultMetaData: IInterestingLighthouseResultType = {
+        type: InterestingLighthouseResult.score,
+      }
+      const performance: IStat = getInterestingLighthouseResultStat(
+        resultMetaData,
+        fromRoots
+      );
       elements.push(<PsiScoreStatTableRow performance={performance} />);
     }
 
@@ -191,7 +200,9 @@ const PageSpeedInsight: FC<IProps> = ({
       <p>
         run {currentRun} / {numRuns}
       </p>
-      <p>page {currentPage}/{infos.length}</p>
+      <p>
+        page {currentPage}/{infos.length}
+      </p>
       <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
       <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
       <button disabled={runStatus == RunStatus.started} onClick={getInfo}>

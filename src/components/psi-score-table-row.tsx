@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
 import IFromRoot from "@/types/i-from-root";
-import { Audits, Metrics } from "@/types/google-api-psi-types";
+import { Audits } from "@/types/google-api-psi-types";
 import PsiAudits from "./psi-audits";
 
 interface IProps {

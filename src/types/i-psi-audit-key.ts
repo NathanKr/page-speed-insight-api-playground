@@ -1,6 +1,13 @@
-import { Audits } from "./google-api-psi-types";
 
 export default interface IPsiAuditsKey {
-  key: keyof (Audits); // --- e.g. "cumulative-layout-shift"
+  key:
+    | "cumulative-layout-shift"
+    | "first-contentful-paint"
+    | "largest-contentful-paint"
+    | "network-rtt"
+    | "network-server-latency"
+    | "render-blocking-resources"
+    | "server-response-time"
+    | "total-blocking-time";
   name: string; // --- e.g. "cls"
 }
