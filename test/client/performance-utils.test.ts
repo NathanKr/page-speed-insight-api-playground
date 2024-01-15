@@ -5,7 +5,7 @@ import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-r
 import { IPsiScore } from "@/types/i-psi-score";
 import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
 import { PsiUrl2FromRootsMap } from "@/types/types";
-import { getInterestingLighthouseResultStatSummary } from "@/utils/client/performance-utils";
+import { getInterestingLighthouseResultStatSummary } from "@/utils/client/psi-results-utils";
 import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 import { describe } from "node:test";
 import { test, expect } from "vitest";
@@ -48,14 +48,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0);
     expect(summary.high).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.89,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.89,
         url: "https://nathankrasney.com/about",
       },
@@ -82,14 +82,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0); // --- only one url
     expect(summary.high).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
@@ -127,14 +127,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0.14);
     expect(summary.high).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        isScore:true,
+        isScore: true,
         result: 0.64,
         url: "https://nathankrasney.com/quiz",
       },

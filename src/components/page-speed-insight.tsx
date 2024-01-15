@@ -21,7 +21,7 @@ import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
-import { getInterestingLighthouseResultStat } from "@/utils/client/performance-utils";
+import { getInterestingLighthouseResultStat } from "@/utils/client/psi-results-utils";
 import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
 
@@ -43,7 +43,7 @@ const PageSpeedInsight: FC<IProps> = ({
   const [loading, setLoading] = useState(false);
   const [currentRun, setCurrentRun] = useState(0);
   const [currentPage, setCurrentRunPage] = useState(0);
-  const [runStatus, setRunStatus] = useState(RunStatus.notStarted);
+  const [allRunsStatus, setAllRunsStatus] = useState(RunStatus.notStarted);
   const [savePageResponseData, setSavePageResponseData] =
     useState<ISavePageResponseData | null>(null);
 
@@ -62,7 +62,7 @@ const PageSpeedInsight: FC<IProps> = ({
     }
   }
 
-  async function getInfo(): Promise<void> {
+  async function getAllRunsInfo(): Promise<void> {
     initState();
 
     for (let iRun = 0; iRun < numRuns; iRun++) {
@@ -75,7 +75,7 @@ const PageSpeedInsight: FC<IProps> = ({
       }
       await pauseMs(delayBetweenRunSec * 1000);
     }
-    setRunStatus(RunStatus.completed);
+    setAllRunsStatus(RunStatus.completed);
   }
 
   const addNewInfo = (newInfoRoot: Root): void => {
@@ -108,7 +108,7 @@ const PageSpeedInsight: FC<IProps> = ({
     setErr(null);
     setLoading(false);
     setCurrentRun(0);
-    setRunStatus(RunStatus.started);
+    setAllRunsStatus(RunStatus.started);
     setSavePageResponseData(null);
   }
 
@@ -149,7 +149,7 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   let id = 0;
-  const elems = Array.from(psiFromRoots.entries()).map((entry) => {
+  const elemsTableRows = Array.from(psiFromRoots.entries()).map((entry) => {
     let url = entry[0];
     let fromRoots = entry[1];
     const elements = fromRoots.map((fromRoot) => {
@@ -157,12 +157,13 @@ const PageSpeedInsight: FC<IProps> = ({
       return <PsiScoreTableRow key={id} fromRoot={fromRoot} url={url} />;
     });
 
-    if (runStatus == RunStatus.completed) {
-      const resultMetaData: IInterestingLighthouseResultType = {
+    if (allRunsStatus == RunStatus.completed) {
+      // --- per page statistics : avg , std
+      const resultMetaDataScore: IInterestingLighthouseResultType = {
         type: InterestingLighthouseResult.score,
-      }
+      };
       const performance: IStat = getInterestingLighthouseResultStat(
-        resultMetaData,
+        resultMetaDataScore,
         fromRoots
       );
       elements.push(<PsiScoreStatTableRow performance={performance} />);
@@ -183,12 +184,13 @@ const PageSpeedInsight: FC<IProps> = ({
           <th>Accessibility</th>
         </tr>
       </thead>
-      <tbody>{elems}</tbody>
+      <tbody>{elemsTableRows}</tbody>
     </table>
   );
 
   let elemCompleteTime, elemCompleteSummary;
-  if (runStatus == RunStatus.completed) {
+  if (allRunsStatus == RunStatus.completed) {
+    // --- all pages statistics : avg , std
     elemCompleteTime = <p>completed : {getLocalDateAndTimeNow()}</p>;
     elemCompleteSummary = (
       <PsiPerformanceScoreSummary psiUrl2FromRootsMap={psiFromRoots} />
@@ -205,13 +207,13 @@ const PageSpeedInsight: FC<IProps> = ({
       </p>
       <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
       <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
-      <button disabled={runStatus == RunStatus.started} onClick={getInfo}>
+      <button disabled={allRunsStatus == RunStatus.started} onClick={getAllRunsInfo}>
         Start
       </button>
       <br />
       {elemCompleteTime}
       <button
-        disabled={runStatus == RunStatus.started}
+        disabled={allRunsStatus == RunStatus.started}
         onClick={saveHtmlOnDisk}
       >
         Save html to file

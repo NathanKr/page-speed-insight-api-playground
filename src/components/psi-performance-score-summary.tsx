@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import ColorPsiScore from "./color-psi-score";
 import ResultUrls from "./result-urls";
-import { getInterestingLighthouseResultStatSummary } from "@/utils/client/performance-utils";
+import { getInterestingLighthouseResultStatSummary } from "@/utils/client/psi-results-utils";
 import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
 
@@ -12,8 +12,8 @@ interface IProps {
 
 const PsiPerformanceScoreSummary: FC<IProps> = ({ psiUrl2FromRootsMap }) => {
   const resultMetaData: IInterestingLighthouseResultType = {
-    type: InterestingLighthouseResult.score
-  }
+    type: InterestingLighthouseResult.score,
+  };
   const performanceScore = getInterestingLighthouseResultStatSummary(
     resultMetaData,
     psiUrl2FromRootsMap

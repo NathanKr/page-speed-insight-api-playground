@@ -3,6 +3,7 @@ import { FC } from "react";
 import IPsiAudit from "@/types/i-psi-audit";
 import ColorPsiScore from "./color-psi-score";
 import { psiAuditsKeys } from "@/utils/client/audit-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 
 interface IProps {
   audits: Audits;
@@ -20,7 +21,7 @@ const PsiAudits: FC<IProps> = ({ audits }) => {
     return (
       <p key={i}>
         <span title={it.name.key}>{it.name.name}</span> score , numericValue :{" "}
-        {elemColorPsiScore} ,{it.numericValue} [{it.numericUnit}]
+        {elemColorPsiScore} ,{limitToTwoDecimalPlaces(it.numericValue)} [{it.numericUnit}]
       </p>
     );
   });

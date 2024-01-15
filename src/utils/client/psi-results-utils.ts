@@ -41,6 +41,12 @@ function getInterestingLighthouseResultArray(
   });
 }
 
+/**
+ * This is the summary per page
+ * @param resultMetaData 
+ * @param roots 
+ * @returns 
+ */
 export function getInterestingLighthouseResultStat(
   resultMetaData: IInterestingLighthouseResultType,
   roots: IFromRoot[]
@@ -50,6 +56,8 @@ export function getInterestingLighthouseResultStat(
     roots
   );
   const interestingStat: IStat = {
+    name : resultMetaData.type,
+    isScore : resultMetaData._isScore ? true: false,
     avg: mean(arInterestingResults),
     std: std(...arInterestingResults),
   };
