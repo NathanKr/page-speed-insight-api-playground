@@ -1,6 +1,6 @@
-enum InterestingLighthouseResultType {
-  score = 'score',
-  value = 'value' // numeric
+enum EInterestingLighthouseResultType {
+  score = "score",
+  value = "value", // numeric
 }
 
-export default InterestingLighthouseResultType;
+export default EInterestingLighthouseResultType;

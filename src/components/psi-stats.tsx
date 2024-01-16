@@ -8,7 +8,7 @@ interface IProps {
 
 const PsiStats: FC<IProps> = ({ stats }) => {
   const elems = stats.map((stat, i) => (
-    <div>
+    <div key={i}>
       <PsiStat key={i} stat={stat} />
     </div>
   ));

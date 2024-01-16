@@ -18,7 +18,7 @@ import InternalApiUrl from "@/types/e-internal-api-url";
 import { convert } from "@/utils/client/psi-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import IFromRoot from "@/types/i-from-root";
-import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
+import PsiPerformanceStatsSummary from "./psi-performance-stats-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
 import {
@@ -164,19 +164,12 @@ const PageSpeedInsight: FC<IProps> = ({
       });
 
       if (allRunsStatus == RunStatus.completed) {
-        // --- per page statistics : avg , std
-        // const resultMetaDataScore: IInterestingLighthouseResultType = {
-        //   service: InterestingLighthouseResult.performance,
-        //   _isScore: true,
-        // };
-        // const performance: IStat = getInterestingLighthouseResultStat(
-        //   resultMetaDataScore,
-        //   fromRootsForCurrentPage
-        // );
         const performanceStats = getAllInterestingLighthouseResultStat(
           fromRootsForCurrentPage
         );
-        elementsForCurrentPage.push(<PsiStatTableRow performance={performanceStats} />);
+        elementsForCurrentPage.push(
+          <PsiStatTableRow performance={performanceStats} />
+        );
       }
 
       return elementsForCurrentPage;
@@ -204,7 +197,7 @@ const PageSpeedInsight: FC<IProps> = ({
     // --- all pages statistics : avg , std
     elemCompleteTime = <p>completed : {getLocalDateAndTimeNow()}</p>;
     elemCompleteSummary = (
-      <PsiPerformanceScoreSummary psiUrl2FromRootsMap={psiFromRoots} />
+      <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRoots} />
     );
   }
 

@@ -1,7 +1,7 @@
-import InterestingLighthouseResultType from "./e-interesting-lighthouse-result-type";
+import EInterestingLighthouseResultType from "./e-interesting-lighthouse-result-type";
 
 export default interface IResultUrl {
-  type: InterestingLighthouseResultType;
+  type: EInterestingLighthouseResultType;
   result: number;
   url: string;
 }

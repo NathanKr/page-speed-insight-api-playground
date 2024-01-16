@@ -1,8 +1,8 @@
-import InterestingLighthouseResultType from "./e-interesting-lighthouse-result-type";
+import EInterestingLighthouseResultType from "./e-interesting-lighthouse-result-type";
 
-export default interface IStat{
-    name : string;
-    type : InterestingLighthouseResultType;
-    avg : number;
-    std : number
+export default interface IStat {
+  name: string;
+  type: EInterestingLighthouseResultType;
+  avg: number;
+  std: number;
 }

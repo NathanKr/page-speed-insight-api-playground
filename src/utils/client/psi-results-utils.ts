@@ -9,7 +9,7 @@ import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result
 import { psiAuditsKeys } from "./audit-utils";
 import IPsiAuditsKey from "@/types/i-psi-audit-key";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
-import InterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
+import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 function getInterestingLighthouseResultValue(
   resultMetaData: IInterestingLighthouseResultType,
@@ -20,7 +20,7 @@ function getInterestingLighthouseResultValue(
   // --- isScore not reevant for score
   if (
     service == InterestingLighthouseResult.performance &&
-    type == InterestingLighthouseResultType.score
+    type == EInterestingLighthouseResultType.score
   ) {
     return root.score.performance!;
   }
@@ -32,7 +32,7 @@ function getInterestingLighthouseResultValue(
 
   if (obj) {
     const audit = root.audits[obj.key];
-    return type == InterestingLighthouseResultType.score
+    return type == EInterestingLighthouseResultType.score
       ? audit.score
       : audit.numericValue;
   }
@@ -65,7 +65,6 @@ export function getInterestingLighthouseResultStat(
   );
   const interestingStat: IStat = {
     name: resultMetaData.service,
-    // isScore: resultMetaData._isScore ? true : false,
     avg: mean(arInterestingResults),
     std: std(...arInterestingResults),
     type: resultMetaData.type,
@@ -77,12 +76,11 @@ export function getInterestingLighthouseResultStat(
 export function getAllInterestingLighthouseResultStat(
   roots: IFromRoot[]
 ): IStat[] {
-  const stats: IStat[] = [];
   const resultsMetaData: IInterestingLighthouseResultType[] = getAllMetaData();
 
-  resultsMetaData.forEach((resultMetaData) => {
-    const stat = getInterestingLighthouseResultStat(resultMetaData, roots);
-    stats.push(stat);
+  // Use map to create a new array of stats
+  const stats: IStat[] = resultsMetaData.map((resultMetaData) => {
+    return getInterestingLighthouseResultStat(resultMetaData, roots);
   });
 
   return stats;
@@ -92,87 +90,105 @@ function getAllMetaData(): IInterestingLighthouseResultType[] {
   return [
     {
       service: InterestingLighthouseResult.performance,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.cls,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.cls,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.ds,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.fcp,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.fcp,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.lcp,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.lcp,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.nrtt,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.nsl,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.rbr,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.rbr,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.srt,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.si,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.si,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.tbw,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
     {
       service: InterestingLighthouseResult.tbt,
-      type: InterestingLighthouseResultType.score,
+      type: EInterestingLighthouseResultType.score,
     },
     {
       service: InterestingLighthouseResult.tbt,
-      type: InterestingLighthouseResultType.value,
+      type: EInterestingLighthouseResultType.value,
     },
   ];
 }
 
-function makeDefaultIScoreSummary(): IResultSummary {
+function makeDefaultIScoreSummary(
+  resultMetaData: IInterestingLighthouseResultType
+): IResultSummary {
   const performanceScore: IResultSummary = {
+    resultMetaData,
     avgResult: null,
     stdResult: null,
     low: [],
     high: [],
   };
   return performanceScore;
+}
+
+export function getAllInterestingLighthouseResultStatSummary(
+  psiUrl2FromRootsMap: PsiUrl2FromRootsMap
+): IResultSummary[] {
+  const resultsMetaData: IInterestingLighthouseResultType[] = getAllMetaData();
+
+  const stats = resultsMetaData.map((resultMetaData) => {
+    return getInterestingLighthouseResultStatSummary(
+      resultMetaData,
+      psiUrl2FromRootsMap
+    );
+  });
+
+  return stats;
 }
 
 /**
@@ -184,7 +200,7 @@ export function getInterestingLighthouseResultStatSummary(
   resultMetaData: IInterestingLighthouseResultType,
   psiUrl2FromRootsMap: PsiUrl2FromRootsMap
 ): IResultSummary {
-  let performanceScore = makeDefaultIScoreSummary();
+  let performanceScore = makeDefaultIScoreSummary(resultMetaData);
 
   try {
     const urlToPerformanceScoreAvgMap: Map<string, IStat> = new Map();
@@ -226,7 +242,7 @@ export function getInterestingLighthouseResultStatSummary(
       }
     });
   } catch (err) {
-    performanceScore = makeDefaultIScoreSummary();
+    performanceScore = makeDefaultIScoreSummary(resultMetaData);
     console.error(err);
   }
 

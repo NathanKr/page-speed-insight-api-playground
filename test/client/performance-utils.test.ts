@@ -9,7 +9,7 @@ import { getInterestingLighthouseResultStatSummary } from "@/utils/client/psi-re
 import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
 import { describe } from "node:test";
 import { test, expect } from "vitest";
-import InterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
+import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 test("limitToTwoDecimalPlaces", () => {
   expect(limitToTwoDecimalPlaces(1.234)).toBe(1.23);
@@ -21,7 +21,7 @@ test("limitToTwoDecimalPlaces", () => {
 describe("getPerformanceStatSummary", () => {
   const resultMetaDataScore: IInterestingLighthouseResultType = {
     service: InterestingLighthouseResult.performance,
-    type: InterestingLighthouseResultType.score
+    type: EInterestingLighthouseResultType.score,
   };
   test("empty map -> default values", () => {
     const summary = getInterestingLighthouseResultStatSummary(
@@ -50,14 +50,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0);
     expect(summary.high).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.89,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.89,
         url: "https://nathankrasney.com/about",
       },
@@ -84,14 +84,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0); // --- only one url
     expect(summary.high).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
@@ -129,14 +129,14 @@ describe("getPerformanceStatSummary", () => {
     expect(summary.stdResult).toBe(0.14);
     expect(summary.high).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
     expect(summary.low).toEqual([
       {
-        type: InterestingLighthouseResultType.score,
+        type: EInterestingLighthouseResultType.score,
         result: 0.64,
         url: "https://nathankrasney.com/quiz",
       },
