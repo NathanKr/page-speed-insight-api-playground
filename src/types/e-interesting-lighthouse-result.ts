@@ -1,7 +1,9 @@
-// --- CAUTION : string should match name in psiAuditsKeys
+// --- CAUTION : audit stuff string should match name in psiAuditsKeys
 enum InterestingLighthouseResult {
-  score = "score",
+  performance = "performance", // score
+  // --- audit stuff start
   cls = "cls",
+  ds = "ds",
   fcp = "fcp",
   lcp = "lcp",
   nrtt = "nrtt",
@@ -10,6 +12,8 @@ enum InterestingLighthouseResult {
   si = "si",
   srt = "srt",
   tbt = "tbt",
+  tbw = "tbw"
+  // --- audit stuff end
 }
 
 export default InterestingLighthouseResult;

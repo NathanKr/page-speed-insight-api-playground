@@ -1,5 +1,7 @@
+import InterestingLighthouseResultType from "./e-interesting-lighthouse-result-type";
+
 export default interface IResultUrl {
-  isScore : boolean;
+  type: InterestingLighthouseResultType;
   result: number;
   url: string;
 }

@@ -3,8 +3,9 @@ import { PsiUrl2FromRootsMap } from "@/types/types";
 import ColorPsiScore from "./color-psi-score";
 import ResultUrls from "./result-urls";
 import { getInterestingLighthouseResultStatSummary } from "@/utils/client/psi-results-utils";
-import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
+import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
+import InterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 interface IProps {
   psiUrl2FromRootsMap: PsiUrl2FromRootsMap;
@@ -12,7 +13,8 @@ interface IProps {
 
 const PsiPerformanceScoreSummary: FC<IProps> = ({ psiUrl2FromRootsMap }) => {
   const resultMetaData: IInterestingLighthouseResultType = {
-    type: InterestingLighthouseResult.score,
+    service: InterestingLighthouseResult.performance,
+    type: InterestingLighthouseResultType.score,
   };
   const performanceScore = getInterestingLighthouseResultStatSummary(
     resultMetaData,

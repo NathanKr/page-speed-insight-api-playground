@@ -5,31 +5,39 @@ import IStat from "@/types/i-stat";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import { max, mean, min, std } from "mathjs";
 import { limitToTwoDecimalPlaces } from "./psi-utils";
-import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
+import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
 import { psiAuditsKeys } from "./audit-utils";
 import IPsiAuditsKey from "@/types/i-psi-audit-key";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
+import InterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 function getInterestingLighthouseResultValue(
   resultMetaData: IInterestingLighthouseResultType,
   root: IFromRoot
 ): number {
-  const { type } = resultMetaData;
+  const { service, type } = resultMetaData;
 
   // --- isScore not reevant for score
-  if (type == InterestingLighthouseResult.score) return root.score.performance!;
+  if (
+    service == InterestingLighthouseResult.performance &&
+    type == InterestingLighthouseResultType.score
+  ) {
+    return root.score.performance!;
+  }
 
   // -- expect audit
   const obj: IPsiAuditsKey | undefined = psiAuditsKeys.find(
-    (it) => it.name == type
+    (it) => it.name == service
   );
 
   if (obj) {
     const audit = root.audits[obj.key];
-    return isScoreWithOverride(resultMetaData) ? audit.score : audit.numericValue;
+    return type == InterestingLighthouseResultType.score
+      ? audit.score
+      : audit.numericValue;
   }
 
-  throw new Error(`type not matched : ${type}`);
+  throw new Error(`service not matched : ${service}`);
 }
 
 function getInterestingLighthouseResultArray(
@@ -43,9 +51,9 @@ function getInterestingLighthouseResultArray(
 
 /**
  * This is the summary per page
- * @param resultMetaData 
- * @param roots 
- * @returns 
+ * @param resultMetaData
+ * @param roots
+ * @returns
  */
 export function getInterestingLighthouseResultStat(
   resultMetaData: IInterestingLighthouseResultType,
@@ -56,13 +64,105 @@ export function getInterestingLighthouseResultStat(
     roots
   );
   const interestingStat: IStat = {
-    name : resultMetaData.type,
-    isScore : resultMetaData._isScore ? true: false,
+    name: resultMetaData.service,
+    // isScore: resultMetaData._isScore ? true : false,
     avg: mean(arInterestingResults),
     std: std(...arInterestingResults),
+    type: resultMetaData.type,
   };
 
   return interestingStat;
+}
+
+export function getAllInterestingLighthouseResultStat(
+  roots: IFromRoot[]
+): IStat[] {
+  const stats: IStat[] = [];
+  const resultsMetaData: IInterestingLighthouseResultType[] = getAllMetaData();
+
+  resultsMetaData.forEach((resultMetaData) => {
+    const stat = getInterestingLighthouseResultStat(resultMetaData, roots);
+    stats.push(stat);
+  });
+
+  return stats;
+}
+
+function getAllMetaData(): IInterestingLighthouseResultType[] {
+  return [
+    {
+      service: InterestingLighthouseResult.performance,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.cls,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.cls,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.ds,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.fcp,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.fcp,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.lcp,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.lcp,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.nrtt,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.nsl,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.rbr,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.rbr,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.srt,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.si,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.si,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.tbw,
+      type: InterestingLighthouseResultType.value,
+    },
+    {
+      service: InterestingLighthouseResult.tbt,
+      type: InterestingLighthouseResultType.score,
+    },
+    {
+      service: InterestingLighthouseResult.tbt,
+      type: InterestingLighthouseResultType.value,
+    },
+  ];
 }
 
 function makeDefaultIScoreSummary(): IResultSummary {
@@ -107,19 +207,18 @@ export function getInterestingLighthouseResultStatSummary(
 
     urlToPerformanceScoreAvgMap.forEach((stat, url) => {
       const avgLimited = limitToTwoDecimalPlaces(stat.avg);
-      const isScore = isScoreWithOverride(resultMetaData);
 
       if (avgLimited == lowScorePerformanceLimited) {
         const scoreUrl: IResultUrl = {
-          isScore,
           result: avgLimited,
           url,
+          type: stat.type,
         };
         performanceScore.low.push(scoreUrl);
       }
       if (avgLimited == highScorePerformanceLimited) {
         const scoreUrl: IResultUrl = {
-          isScore,
+          type: stat.type,
           result: avgLimited,
           url,
         };
@@ -132,11 +231,4 @@ export function getInterestingLighthouseResultStatSummary(
   }
 
   return performanceScore;
-}
-
-function isScoreWithOverride(resultMetaData: IInterestingLighthouseResultType): boolean {
-  const { _isScore, type } = resultMetaData;
-  if (type == InterestingLighthouseResult.score) return true; // decide by type
-
-  return _isScore!;
 }

@@ -9,7 +9,7 @@ interface IProps {
 const ResultUrls: FC<IProps> = ({ resultUrls }) => {
   const elems = resultUrls.map((it, i) => (
     <div key={i}>
-      <ResultUrl result={it.result} url={it.url} isScore={it.isScore} />
+      <ResultUrl result={it.result} url={it.url} type={it.type} />
     </div>
   ));
   return <>{elems}</>;

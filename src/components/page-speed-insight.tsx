@@ -12,7 +12,7 @@ import PsiScoreTableRow from "./psi-score-table-row";
 import styles from "@/styles/page-speed-insight.module.css";
 import { PAUSE_BETWEEN_API_MS } from "@/utils/client/constants";
 import RunStatus from "@/types/e-run-status";
-import PsiScoreStatTableRow from "./psi-score-stat-table-row";
+import PsiStatTableRow from "./psi-stat-table-row";
 import IStat from "@/types/i-stat";
 import InternalApiUrl from "@/types/e-internal-api-url";
 import { convert } from "@/utils/client/psi-utils";
@@ -21,8 +21,11 @@ import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceScoreSummary from "./psi-performance-score-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
-import { getInterestingLighthouseResultStat } from "@/utils/client/psi-results-utils";
-import InterestingLighthouseResult from "@/types/interesting-lighthouse-result";
+import {
+  getAllInterestingLighthouseResultStat,
+  getInterestingLighthouseResultStat,
+} from "@/utils/client/psi-results-utils";
+import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
 import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
 
 interface IProps {
@@ -149,28 +152,36 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   let id = 0;
-  const elemsTableRows = Array.from(psiFromRoots.entries()).map((entry) => {
-    let url = entry[0];
-    let fromRoots = entry[1];
-    const elements = fromRoots.map((fromRoot) => {
-      id++;
-      return <PsiScoreTableRow key={id} fromRoot={fromRoot} url={url} />;
-    });
+  const elemsTableRows = Array.from(psiFromRoots.entries()).map(
+    (entryCurrentPage) => {
+      let urlCurrentPage = entryCurrentPage[0];
+      let fromRootsForCurrentPage = entryCurrentPage[1];
+      const elementsForCurrentPage = fromRootsForCurrentPage.map((fromRoot) => {
+        id++;
+        return (
+          <PsiScoreTableRow key={id} fromRoot={fromRoot} url={urlCurrentPage} />
+        );
+      });
 
-    if (allRunsStatus == RunStatus.completed) {
-      // --- per page statistics : avg , std
-      const resultMetaDataScore: IInterestingLighthouseResultType = {
-        type: InterestingLighthouseResult.score,
-      };
-      const performance: IStat = getInterestingLighthouseResultStat(
-        resultMetaDataScore,
-        fromRoots
-      );
-      elements.push(<PsiScoreStatTableRow performance={performance} />);
+      if (allRunsStatus == RunStatus.completed) {
+        // --- per page statistics : avg , std
+        // const resultMetaDataScore: IInterestingLighthouseResultType = {
+        //   service: InterestingLighthouseResult.performance,
+        //   _isScore: true,
+        // };
+        // const performance: IStat = getInterestingLighthouseResultStat(
+        //   resultMetaDataScore,
+        //   fromRootsForCurrentPage
+        // );
+        const performanceStats = getAllInterestingLighthouseResultStat(
+          fromRootsForCurrentPage
+        );
+        elementsForCurrentPage.push(<PsiStatTableRow performance={performanceStats} />);
+      }
+
+      return elementsForCurrentPage;
     }
-
-    return elements;
-  });
+  );
 
   const elemTable = (
     <table>
@@ -207,7 +218,10 @@ const PageSpeedInsight: FC<IProps> = ({
       </p>
       <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
       <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
-      <button disabled={allRunsStatus == RunStatus.started} onClick={getAllRunsInfo}>
+      <button
+        disabled={allRunsStatus == RunStatus.started}
+        onClick={getAllRunsInfo}
+      >
         Start
       </button>
       <br />

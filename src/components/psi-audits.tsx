@@ -20,7 +20,7 @@ const PsiAudits: FC<IProps> = ({ audits }) => {
     );
     return (
       <p key={i}>
-        <span title={it.name.key}>{it.name.name}</span> score , numericValue :{" "}
+        <span title={it.name.key}>{it.name.name}</span> score , value :{" "}
         {elemColorPsiScore} ,{limitToTwoDecimalPlaces(it.numericValue)} [{it.numericUnit}]
       </p>
     );
