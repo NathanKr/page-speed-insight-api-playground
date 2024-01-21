@@ -5,6 +5,7 @@ export default interface IResultSummary {
   resultMetaData: IInterestingLighthouseResultType;
   avgResult: number | null; // avarage on all avg
   stdResult: number | null; // avarage on all std
-  low: IResultUrl[]; // low scores (if few has same score)
-  high: IResultUrl[]; // high scores (if few has same score)
+  lowAvg: IResultUrl[]; // low average (if few has same value)
+  highAvg: IResultUrl[]; // high average (if few has same score)
+  rankingAvgHighToLow: IResultUrl[];
 }

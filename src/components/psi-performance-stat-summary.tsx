@@ -11,6 +11,8 @@ interface IProps {
 
 const PsiPerformanceStatSummary: FC<IProps> = ({ performanceStatsSummary }) => {
   const { service, type } = performanceStatsSummary.resultMetaData;
+  const { rankingAvgHighToLow } = performanceStatsSummary;
+
   const avg = performanceStatsSummary.avgResult!;
   const elemAvg =
     type == EInterestingLighthouseResultType.score ? (
@@ -19,21 +21,36 @@ const PsiPerformanceStatSummary: FC<IProps> = ({ performanceStatsSummary }) => {
       <span>{limitToTwoDecimalPlaces(avg)}</span>
     );
 
+  const elemsLowHigh = (
+    <>
+      {" "}
+      <p>
+        <h4>Low :</h4>{" "}
+        <ResultUrls resultUrls={performanceStatsSummary.lowAvg} />
+      </p>
+      <p>
+        <h4>High :</h4>{" "}
+        <ResultUrls resultUrls={performanceStatsSummary.highAvg} />
+      </p>
+    </>
+  );
+
+  const elemsRanking = <ResultUrls resultUrls={rankingAvgHighToLow} />;
+
   return (
     <>
-      <h3>
+      <h2>
         {service} {type} summary
-      </h3>
+      </h2>
       <p>
-        <h4>Avg : {elemAvg}</h4>
-        <h4>Std : {performanceStatsSummary.stdResult}</h4>
+        <h3>Avg : {elemAvg}</h3>
+        <h3>Std : {performanceStatsSummary.stdResult}</h3>
       </p>
-      <p>
-        <h4>Low :</h4> <ResultUrls resultUrls={performanceStatsSummary.low} />
-      </p>
-      <p>
-        <h4>High :</h4> <ResultUrls resultUrls={performanceStatsSummary.high} />
-      </p>
+      <br/>
+      {elemsLowHigh}
+      <br/>
+      <h3>Ranking</h3>
+      {elemsRanking}
     </>
   );
 };

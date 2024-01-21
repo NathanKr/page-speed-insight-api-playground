@@ -170,8 +170,9 @@ function makeDefaultIScoreSummary(
     resultMetaData,
     avgResult: null,
     stdResult: null,
-    low: [],
-    high: [],
+    lowAvg: [],
+    highAvg: [],
+    rankingAvgHighToLow: [],
   };
   return performanceScore;
 }
@@ -200,51 +201,49 @@ export function getInterestingLighthouseResultStatSummary(
   resultMetaData: IInterestingLighthouseResultType,
   psiUrl2FromRootsMap: PsiUrl2FromRootsMap
 ): IResultSummary {
-  let performanceScore = makeDefaultIScoreSummary(resultMetaData);
+  let performanceResult = makeDefaultIScoreSummary(resultMetaData);
 
   try {
-    const urlToPerformanceScoreAvgMap: Map<string, IStat> = new Map();
+    const urlToPerformanceResultAvgMap: Map<string, IStat> = new Map();
     psiUrl2FromRootsMap.forEach((psiRoots, url) => {
       const interestingStat: IStat = getInterestingLighthouseResultStat(
         resultMetaData,
         psiRoots
       );
-      urlToPerformanceScoreAvgMap.set(url, interestingStat);
+      urlToPerformanceResultAvgMap.set(url, interestingStat);
     });
 
-    const arStats: IStat[] = Array.from(urlToPerformanceScoreAvgMap.values());
+    const arStats: IStat[] = Array.from(urlToPerformanceResultAvgMap.values());
     const arAvg = arStats.map((it) => it.avg);
-    performanceScore.avgResult = limitToTwoDecimalPlaces(mean(arAvg));
+    performanceResult.avgResult = limitToTwoDecimalPlaces(mean(arAvg));
 
-    performanceScore.stdResult = limitToTwoDecimalPlaces(std(...arAvg));
+    performanceResult.stdResult = limitToTwoDecimalPlaces(std(...arAvg));
 
-    const lowScorePerformanceLimited = limitToTwoDecimalPlaces(min(arAvg));
-    const highScorePerformanceLimited = limitToTwoDecimalPlaces(max(arAvg));
+    const lowResultPerformanceLimited = limitToTwoDecimalPlaces(min(arAvg));
+    const highResultPerformanceLimited = limitToTwoDecimalPlaces(max(arAvg));
 
-    urlToPerformanceScoreAvgMap.forEach((stat, url) => {
+    urlToPerformanceResultAvgMap.forEach((stat, url) => {
       const avgLimited = limitToTwoDecimalPlaces(stat.avg);
-
-      if (avgLimited == lowScorePerformanceLimited) {
-        const scoreUrl: IResultUrl = {
-          result: avgLimited,
-          url,
-          type: stat.type,
-        };
-        performanceScore.low.push(scoreUrl);
+      const resultUrl: IResultUrl = {
+        result: avgLimited,
+        url,
+        type: stat.type,
+      };
+      performanceResult.rankingAvgHighToLow.push(resultUrl);
+      if (avgLimited == lowResultPerformanceLimited) {
+        performanceResult.lowAvg.push(resultUrl);
       }
-      if (avgLimited == highScorePerformanceLimited) {
-        const scoreUrl: IResultUrl = {
-          type: stat.type,
-          result: avgLimited,
-          url,
-        };
-        performanceScore.high.push(scoreUrl);
+      if (avgLimited == highResultPerformanceLimited) {
+        performanceResult.highAvg.push(resultUrl);
       }
     });
   } catch (err) {
-    performanceScore = makeDefaultIScoreSummary(resultMetaData);
+    performanceResult = makeDefaultIScoreSummary(resultMetaData);
     console.error(err);
   }
 
-  return performanceScore;
+  // --- sort inplace , show from high to low
+  performanceResult.rankingAvgHighToLow.sort((a, b) => b.result - a.result);
+
+  return performanceResult;
 }

@@ -30,8 +30,8 @@ describe("getPerformanceStatSummary", () => {
     );
     expect(summary.avgResult).toBeFalsy();
     expect(summary.stdResult).toBeFalsy();
-    expect(summary.high).toEqual([]);
-    expect(summary.low).toEqual([]);
+    expect(summary.highAvg).toEqual([]);
+    expect(summary.lowAvg).toEqual([]);
   });
 
   test("map with one url and one sample", () => {
@@ -48,14 +48,14 @@ describe("getPerformanceStatSummary", () => {
     );
     expect(summary.avgResult).toBe(0.89);
     expect(summary.stdResult).toBe(0);
-    expect(summary.high).toEqual([
+    expect(summary.highAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.89,
         url: "https://nathankrasney.com/about",
       },
     ]);
-    expect(summary.low).toEqual([
+    expect(summary.lowAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.89,
@@ -82,14 +82,14 @@ describe("getPerformanceStatSummary", () => {
     );
     expect(summary.avgResult).toBe(0.84);
     expect(summary.stdResult).toBe(0); // --- only one url
-    expect(summary.high).toEqual([
+    expect(summary.highAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
-    expect(summary.low).toEqual([
+    expect(summary.lowAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.84,
@@ -127,14 +127,14 @@ describe("getPerformanceStatSummary", () => {
     );
     expect(summary.avgResult).toBe(0.74);
     expect(summary.stdResult).toBe(0.14);
-    expect(summary.high).toEqual([
+    expect(summary.highAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.84,
         url: "https://nathankrasney.com/about",
       },
     ]);
-    expect(summary.low).toEqual([
+    expect(summary.lowAvg).toEqual([
       {
         type: EInterestingLighthouseResultType.score,
         result: 0.64,
