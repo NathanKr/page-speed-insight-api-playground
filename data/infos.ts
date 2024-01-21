@@ -4,7 +4,8 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 // const baseUrl = "https://nathan-krasney-iex9gkios-natankrasney-gmailcom-s-team.vercel.app/"
 //  const baseUrl = "https://nathan-krasney-7xtfq4ese-natankrasney-gmailcom-s-team.vercel.app"
 // const baseUrl = "https://nathan-krasney-jfwafu53e-natankrasney-gmailcom-s-team.vercel.app"
- const baseUrl = "https://nathankrasney.com";
+//  const baseUrl = "https://nathankrasney.com";
+const baseUrl = "https://nathan-krasney-mfvt6hxyt-natankrasney-gmailcom-s-team.vercel.app";
 
 const tabs: string[] = [
   "/",

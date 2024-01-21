@@ -13,7 +13,6 @@ import styles from "@/styles/page-speed-insight.module.css";
 import { PAUSE_BETWEEN_API_MS } from "@/utils/client/constants";
 import RunStatus from "@/types/e-run-status";
 import PsiStatTableRow from "./psi-stat-table-row";
-import IStat from "@/types/i-stat";
 import InternalApiUrl from "@/types/e-internal-api-url";
 import { convert } from "@/utils/client/psi-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
@@ -21,12 +20,7 @@ import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceStatsSummary from "./psi-performance-stats-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
-import {
-  getAllInterestingLighthouseResultStat,
-  getInterestingLighthouseResultStat,
-} from "@/utils/client/psi-results-utils";
-import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
-import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-result-type";
+import { getAllInterestingLighthouseResultStat } from "@/utils/client/psi-results-utils";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -49,6 +43,7 @@ const PageSpeedInsight: FC<IProps> = ({
   const [allRunsStatus, setAllRunsStatus] = useState(RunStatus.notStarted);
   const [savePageResponseData, setSavePageResponseData] =
     useState<ISavePageResponseData | null>(null);
+  const [showSummaryDetails, setShowSummaryDetails] = useState(false);
 
   async function saveHtmlOnDisk() {
     const body: ISavePageRequestBody = {
@@ -197,7 +192,15 @@ const PageSpeedInsight: FC<IProps> = ({
     // --- all pages statistics : avg , std
     elemCompleteTime = <p>completed : {getLocalDateAndTimeNow()}</p>;
     elemCompleteSummary = (
-      <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRoots} />
+      <>
+        <br />
+        <button onClick={() => setShowSummaryDetails(!showSummaryDetails)}>
+          {showSummaryDetails ? "Hide Summary Details" : "Show Summary Details" }
+        </button>
+        {showSummaryDetails && (
+          <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRoots} />
+        )}
+      </>
     );
   }
 
