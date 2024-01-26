@@ -43,7 +43,7 @@ const PageSpeedInsight: FC<IProps> = ({
   const [allRunsStatus, setAllRunsStatus] = useState(RunStatus.notStarted);
   const [savePageResponseData, setSavePageResponseData] =
     useState<ISavePageResponseData | null>(null);
-  const [showSummaryDetails, setShowSummaryDetails] = useState(false);
+  const [showSummaryDetails, setShowSummaryDetails] = useState(true);
 
   async function saveHtmlOnDisk() {
     const body: ISavePageRequestBody = {

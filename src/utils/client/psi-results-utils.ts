@@ -172,7 +172,7 @@ function makeDefaultIScoreSummary(
     stdResult: null,
     lowAvg: [],
     highAvg: [],
-    rankingAvgHighToLow: [],
+    rankingAvgLowToHigh: [],
   };
   return performanceScore;
 }
@@ -229,7 +229,7 @@ export function getInterestingLighthouseResultStatSummary(
         url,
         type: stat.type,
       };
-      performanceResult.rankingAvgHighToLow.push(resultUrl);
+      performanceResult.rankingAvgLowToHigh.push(resultUrl);
       if (avgLimited == lowResultPerformanceLimited) {
         performanceResult.lowAvg.push(resultUrl);
       }
@@ -242,8 +242,8 @@ export function getInterestingLighthouseResultStatSummary(
     console.error(err);
   }
 
-  // --- sort inplace , show from high to low
-  performanceResult.rankingAvgHighToLow.sort((a, b) => b.result - a.result);
+  // --- sort inplace , show from low to high 
+  performanceResult.rankingAvgLowToHigh.sort((a, b) => a.result - b.result);
 
   return performanceResult;
 }

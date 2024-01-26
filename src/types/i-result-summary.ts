@@ -7,5 +7,5 @@ export default interface IResultSummary {
   stdResult: number | null; // avarage on all std
   lowAvg: IResultUrl[]; // low average (if few has same value)
   highAvg: IResultUrl[]; // high average (if few has same score)
-  rankingAvgHighToLow: IResultUrl[];
+  rankingAvgLowToHigh: IResultUrl[];
 }

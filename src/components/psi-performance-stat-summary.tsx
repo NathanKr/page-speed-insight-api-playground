@@ -11,7 +11,7 @@ interface IProps {
 
 const PsiPerformanceStatSummary: FC<IProps> = ({ performanceStatsSummary }) => {
   const { service, type } = performanceStatsSummary.resultMetaData;
-  const { rankingAvgHighToLow } = performanceStatsSummary;
+  const { rankingAvgLowToHigh: rankingAvgHighToLow } = performanceStatsSummary;
 
   const avg = performanceStatsSummary.avgResult!;
   const elemAvg =
@@ -46,9 +46,9 @@ const PsiPerformanceStatSummary: FC<IProps> = ({ performanceStatsSummary }) => {
         <h3>Avg : {elemAvg}</h3>
         <h3>Std : {performanceStatsSummary.stdResult}</h3>
       </p>
-      <br/>
+      <br />
       {elemsLowHigh}
-      <br/>
+      <br />
       <h3>Ranking</h3>
       {elemsRanking}
     </>

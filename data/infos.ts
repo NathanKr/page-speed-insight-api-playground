@@ -4,9 +4,10 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 // const baseUrl = "https://nathan-krasney-iex9gkios-natankrasney-gmailcom-s-team.vercel.app/"
 //  const baseUrl = "https://nathan-krasney-7xtfq4ese-natankrasney-gmailcom-s-team.vercel.app"
 // const baseUrl = "https://nathan-krasney-jfwafu53e-natankrasney-gmailcom-s-team.vercel.app"
-//  const baseUrl = "https://nathankrasney.com";
-const baseUrl = "https://nathan-krasney-mfvt6hxyt-natankrasney-gmailcom-s-team.vercel.app";
+  const baseUrl = "https://nathankrasney.com";
 
+
+  
 const tabs: string[] = [
   "/",
   "/about",
@@ -23,8 +24,10 @@ const tabs: string[] = [
   "/posts/next.js-turbopack",
   "/posts/what-is-postcss",
   "/posts/reduce-css-file-size-for-better-performance",
+  "/posts/srcset-and-responsive-images",
   "/events",
 ];
+
 const catChosen = {
   performance: true,
   accessibility: true,
