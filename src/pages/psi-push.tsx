@@ -4,7 +4,7 @@ import { DELAY_BETWEEN_RUN_SEC, NUM_RUNS } from "@/utils/client/constants";
 
 const debug = false;
 
-export default function PsiRealTime() {
+export default function PsiPush() {
   const elemPsi = debug ? (
     <PageSpeedInsight
       numRuns={2}
@@ -21,7 +21,7 @@ export default function PsiRealTime() {
 
   return (
     <>
-      <h1>PsiRealTime</h1>
+      <h1>PsiPush</h1>
       {elemPsi}
     </>
   );

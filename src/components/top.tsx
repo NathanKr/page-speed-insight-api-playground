@@ -5,8 +5,8 @@ const Top = () => {
     return (
         <div className={styles.container}>
             <Link href='/'>home</Link>
-            <Link href='/psi-realtime'>realtime</Link>
-            <Link href='/psi-offline'>offline</Link>
+            <Link href='/psi-push'>psi push</Link>
+            <Link href='/psi-pull'>psi pull</Link>
         </div>
     );
 };

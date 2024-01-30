@@ -6,7 +6,7 @@ import axios from "axios";
 
 const queryKey = ["latestOffline"];
 
-const PsiOffline = () => {
+const PsiPull = () => {
   const { isPending, error, data } = useQuery({
     queryKey,
     queryFn: latestOfflineQueryHandler,
@@ -30,12 +30,11 @@ const PsiOffline = () => {
 
   return (
     <div>
-      <h1>PsiOffline</h1>
-      <button onClick={latestOfflineQueryHandler}>Get stats</button>
+      <h1>PsiPull</h1>
       <p>samples : {data.numSamples}</p>
       {elemsStatsSummary}
     </div>
   );
 };
 
-export default PsiOffline;
+export default PsiPull;
