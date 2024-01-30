@@ -5,8 +5,8 @@ import IInterestingLighthouseResultType from "@/types/i-interesting-lighthouse-r
 import { IPsiScore } from "@/types/i-psi-score";
 import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
 import { PsiUrl2FromRootsMap } from "@/types/types";
-import { getInterestingLighthouseResultStatSummary } from "@/utils/client/psi-results-utils";
-import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
+import { getInterestingLighthouseResultStatSummary } from "@/utils/common/psi-results-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
 import { describe } from "node:test";
 import { test, expect } from "vitest";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";

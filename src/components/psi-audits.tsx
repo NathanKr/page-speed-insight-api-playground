@@ -2,8 +2,8 @@ import { Audits } from "@/types/google-api-psi-types";
 import { FC } from "react";
 import IPsiAudit from "@/types/i-psi-audit";
 import ColorPsiScore from "./color-psi-score";
-import { psiAuditsKeys } from "@/utils/client/audit-utils";
-import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
+import { psiAuditsKeys } from "@/utils/common/audit-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
 
 interface IProps {
   audits: Audits;
@@ -21,7 +21,8 @@ const PsiAudits: FC<IProps> = ({ audits }) => {
     return (
       <p key={i}>
         <span title={it.name.key}>{it.name.name}</span> score , value :{" "}
-        {elemColorPsiScore} ,{limitToTwoDecimalPlaces(it.numericValue)} [{it.numericUnit}]
+        {elemColorPsiScore} ,{limitToTwoDecimalPlaces(it.numericValue)} [
+        {it.numericUnit}]
       </p>
     );
   });

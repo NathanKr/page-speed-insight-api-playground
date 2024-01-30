@@ -14,13 +14,14 @@ import { PAUSE_BETWEEN_API_MS } from "@/utils/client/constants";
 import RunStatus from "@/types/e-run-status";
 import PsiStatTableRow from "./psi-stat-table-row";
 import InternalApiUrl from "@/types/e-internal-api-url";
-import { convert } from "@/utils/client/psi-utils";
+import { convert, updateMap } from "@/utils/common/psi-utils";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import IFromRoot from "@/types/i-from-root";
 import PsiPerformanceStatsSummary from "./psi-performance-stats-summary";
 import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
-import { getAllInterestingLighthouseResultStat } from "@/utils/client/psi-results-utils";
+import { getAllInterestingLighthouseResultStat } from "@/utils/common/psi-results-utils";
+import { PSI_API_SAMPLE_SAVE_TO_MONGODB } from "../../data/infos";
 
 interface IProps {
   infos: IGetPsiInfo[];
@@ -33,7 +34,7 @@ const PageSpeedInsight: FC<IProps> = ({
   numRuns,
   delayBetweenRunSec,
 }) => {
-  const [psiFromRoots, setPsiFromRoots] = useState<PsiUrl2FromRootsMap>(
+  const [psiFromRootsMap, setPsiFromRootsMap] = useState<PsiUrl2FromRootsMap>(
     new Map()
   );
   const [err, setErr] = useState<AxiosError | null>(null);
@@ -81,20 +82,10 @@ const PageSpeedInsight: FC<IProps> = ({
     const newInfo: IFromRoot = convert(newInfoRoot);
     console.log(newInfoRoot.lighthouseResult.audits);
 
-    setPsiFromRoots((prevRoots) => {
+    setPsiFromRootsMap((prevMap) => {
       // Use the spread operator to create a new Map with the previous items
-      const updatedRoots = new Map(prevRoots);
-      const key = newInfoRoot.lighthouseResult.requestedUrl;
-      let updatedValue = updatedRoots.get(key);
-      if (updatedValue) {
-        // Create a new array with the updated value --> strange results without this
-        updatedValue = [...updatedValue, newInfo];
-
-        // Add the new item to the Map using its ID as the key
-        updatedRoots.set(key, updatedValue);
-      } else {
-        updatedRoots.set(key, [newInfo]);
-      }
+      const updatedRoots = new Map(prevMap);
+      updateMap(newInfoRoot, updatedRoots, newInfo);
 
       // Return the updated Map, which will be used as the new state
       return updatedRoots;
@@ -102,7 +93,7 @@ const PageSpeedInsight: FC<IProps> = ({
   };
 
   function initState() {
-    setPsiFromRoots(new Map());
+    setPsiFromRootsMap(new Map());
     setErr(null);
     setLoading(false);
     setCurrentRun(0);
@@ -147,7 +138,7 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   let id = 0;
-  const elemsTableRows = Array.from(psiFromRoots.entries()).map(
+  const elemsTableRows = Array.from(psiFromRootsMap.entries()).map(
     (entryCurrentPage) => {
       let urlCurrentPage = entryCurrentPage[0];
       let fromRootsForCurrentPage = entryCurrentPage[1];
@@ -195,10 +186,10 @@ const PageSpeedInsight: FC<IProps> = ({
       <>
         <br />
         <button onClick={() => setShowSummaryDetails(!showSummaryDetails)}>
-          {showSummaryDetails ? "Hide Summary Details" : "Show Summary Details" }
+          {showSummaryDetails ? "Hide Summary Details" : "Show Summary Details"}
         </button>
         {showSummaryDetails && (
-          <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRoots} />
+          <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRootsMap} />
         )}
       </>
     );
@@ -207,13 +198,17 @@ const PageSpeedInsight: FC<IProps> = ({
   return (
     <div className={styles.container}>
       <p>
-        run {currentRun} / {numRuns}
+        Run {currentRun} / {numRuns}
       </p>
       <p>
-        page {currentPage}/{infos.length}
+        Page {currentPage}/{infos.length}
       </p>
-      <p>pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
-      <p>delay between run sec : {delayBetweenRunSec} [sec]</p>
+      <p>Pause between api : {PAUSE_BETWEEN_API_MS} [ms]</p>
+      <p>Delay between run sec : {delayBetweenRunSec} [sec]</p>
+      <p>
+        Samples saved to DB :{" "}
+        {PSI_API_SAMPLE_SAVE_TO_MONGODB ? "true" : "false"}
+      </p>
       <button
         disabled={allRunsStatus == RunStatus.started}
         onClick={getAllRunsInfo}

@@ -3,7 +3,7 @@ import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
 import ResultUrls from "./result-urls";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
-import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
 
 interface IProps {
   performanceStatsSummary: IResultSummary;

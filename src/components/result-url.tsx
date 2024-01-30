@@ -2,7 +2,7 @@ import IResultUrl from "@/types/i-result-url";
 import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
-import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
 
 const ResultUrl: FC<IResultUrl> = ({ type, result, url }) => {
   const resultElem =

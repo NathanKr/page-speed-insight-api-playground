@@ -1,7 +1,7 @@
 import IStat from "@/types/i-stat";
 import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
-import { limitToTwoDecimalPlaces } from "@/utils/client/psi-utils";
+import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 interface IProps {

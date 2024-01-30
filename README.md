@@ -27,6 +27,11 @@ npm run dev
 </li>
 </ul>
 
+<h2>Save data /api/psi</h2>
+<p>The psi sample is saved by default to mongodb. you can disable it via PSI_API_SAMPLE_SAVE_TO_MONGODB</p>
+<p>Zero config beside mongodb installed locally</p>
+
+
 <h2>References</h2>
 <ul>
 <li><a href='https://developers.google.com/speed/docs/insights/v5/get-started'>Get started</a></li>

@@ -28,6 +28,8 @@ const tabs: string[] = [
   "/events",
 ];
 
+export const PSI_API_SAMPLE_SAVE_TO_MONGODB = true;
+
 const catChosen = {
   performance: true,
   accessibility: true,

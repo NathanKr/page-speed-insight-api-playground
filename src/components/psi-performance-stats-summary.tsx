@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { PsiUrl2FromRootsMap } from "@/types/types";
-import { getAllInterestingLighthouseResultStatSummary } from "@/utils/client/psi-results-utils";
+import { getAllInterestingLighthouseResultStatSummary } from "@/utils/common/psi-results-utils";
 import PsiPerformanceStatSummary from "./psi-performance-stat-summary";
 
 interface IProps {

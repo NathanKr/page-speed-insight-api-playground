@@ -3,7 +3,6 @@ import { Root } from "@/types/google-api-psi-types";
 import IFromRoot from "@/types/i-from-root";
 import { IPsiScore } from "@/types/i-psi-score";
 
-
 export function limitToTwoDecimalPlaces(num: number): number {
   // Round the number to two decimal places
   let roundedNumber: number = parseFloat(num.toFixed(2));
@@ -36,3 +35,29 @@ export const determinePlatform = (url: string): StrategyGoogleApi => {
     return StrategyGoogleApi.mobile;
   }
 };
+
+export function updateMap(
+  newInfoRoot: Root,
+  mapFromRoots: Map<string, IFromRoot[]>,
+  newInfo: IFromRoot
+) {
+  const keyUrl = newInfoRoot.lighthouseResult.requestedUrl;
+  updateMapWithUrl(mapFromRoots, keyUrl, newInfo);
+}
+
+export function updateMapWithUrl(
+  mapFromRoots: Map<string, IFromRoot[]>,
+  keyUrl: string,
+  newInfo: IFromRoot
+) {
+  let updatedValue = mapFromRoots.get(keyUrl);
+  if (updatedValue) {
+    // Create a new array with the updated value --> strange results without this
+    updatedValue = [...updatedValue, newInfo];
+
+    // Add the new item to the Map using its ID as the keyUrl
+    mapFromRoots.set(keyUrl, updatedValue);
+  } else {
+    mapFromRoots.set(keyUrl, [newInfo]);
+  }
+}
