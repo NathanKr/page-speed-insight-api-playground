@@ -28,8 +28,7 @@ npm run dev
 </ul>
 
 <h2>Save data /api/psi</h2>
-<p>The psi sample is saved by default to mongodb. you can disable it via PSI_API_SAMPLE_SAVE_TO_MONGODB</p>
-<p>Zero config beside mongodb installed locally</p>
+<p>The psi sample is saved by default to mongodb. you can disable it via PSI_API_SAMPLE_SAVE_TO_MONGODB. Otherwise you need to define DB_NAME and MONGODB_URI in .env.local</p>
 
 
 <h2>References</h2>
