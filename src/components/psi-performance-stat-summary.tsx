@@ -3,7 +3,7 @@ import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
 import ResultUrls from "./result-urls";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
-import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
+import { limitToThreeDecimalPlaces } from "@/utils/common/psi-utils";
 
 interface IProps {
   performanceStatsSummary: IResultSummary;
@@ -18,7 +18,7 @@ const PsiPerformanceStatSummary: FC<IProps> = ({ performanceStatsSummary }) => {
     type == EInterestingLighthouseResultType.score ? (
       <ColorPsiScore score={avg} as={"span"} />
     ) : (
-      <span>{limitToTwoDecimalPlaces(avg)}</span>
+      <span>{limitToThreeDecimalPlaces(avg)}</span>
     );
 
   const elemsLowHigh = (

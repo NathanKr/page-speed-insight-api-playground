@@ -1,6 +1,6 @@
 import { FC } from "react";
 import styles from "@/styles/color-psi-score.module.css";
-import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
+import { limitToThreeDecimalPlaces } from "@/utils/common/psi-utils";
 
 // range is   0–49 : red , 50–89 : orange , 90–100 : green
 const BEST_SCORE_LOW_LIMIT = 0.9;
@@ -18,7 +18,7 @@ function getClassName(scoreFixedNumber: number): string {
 }
 
 const ColorPsiScore: FC<IProps> = ({ score, as: Element }) => {
-  const scoreFixedNumber = limitToTwoDecimalPlaces(score);
+  const scoreFixedNumber = limitToThreeDecimalPlaces(score);
 
   return (
     <Element className={getClassName(scoreFixedNumber)}>

@@ -3,11 +3,21 @@ import { Root } from "@/types/google-api-psi-types";
 import IFromRoot from "@/types/i-from-root";
 import { IPsiScore } from "@/types/i-psi-score";
 
-export function limitToTwoDecimalPlaces(num: number): number {
+export function limitToDecimalPlaces(num: number, decimalPlaces : number): number {
   // Round the number to two decimal places
-  let roundedNumber: number = parseFloat(num.toFixed(2));
+  let roundedNumber: number = parseFloat(num.toFixed(decimalPlaces));
 
   return roundedNumber;
+}
+
+export function limitToTwoDecimalPlaces(num: number): number {
+  // Round the number to two decimal places
+  return limitToDecimalPlaces(num,2)
+}
+
+export function limitToThreeDecimalPlaces(num: number): number {
+  // Round the number to two decimal places
+  return limitToDecimalPlaces(num,3)
 }
 
 export function convert(newInfoRoot: Root): IFromRoot {

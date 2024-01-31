@@ -4,7 +4,7 @@ import IResultUrl from "@/types/i-result-url";
 import IStat from "@/types/i-stat";
 import { PsiUrl2FromRootsMap } from "@/types/types";
 import { max, mean, min, std } from "mathjs";
-import { limitToTwoDecimalPlaces } from "./psi-utils";
+import { limitToThreeDecimalPlaces } from "./psi-utils";
 import InterestingLighthouseResult from "@/types/e-interesting-lighthouse-result";
 import { psiAuditsKeys } from "./audit-utils";
 import IPsiAuditsKey from "@/types/i-psi-audit-key";
@@ -215,15 +215,15 @@ export function getInterestingLighthouseResultStatSummary(
 
     const arStats: IStat[] = Array.from(urlToPerformanceResultAvgMap.values());
     const arAvg = arStats.map((it) => it.avg);
-    performanceResult.avgResult = limitToTwoDecimalPlaces(mean(arAvg));
+    performanceResult.avgResult = limitToThreeDecimalPlaces(mean(arAvg));
 
-    performanceResult.stdResult = limitToTwoDecimalPlaces(std(...arAvg));
+    performanceResult.stdResult = limitToThreeDecimalPlaces(std(...arAvg));
 
-    const lowResultPerformanceLimited = limitToTwoDecimalPlaces(min(arAvg));
-    const highResultPerformanceLimited = limitToTwoDecimalPlaces(max(arAvg));
+    const lowResultPerformanceLimited = limitToThreeDecimalPlaces(min(arAvg));
+    const highResultPerformanceLimited = limitToThreeDecimalPlaces(max(arAvg));
 
     urlToPerformanceResultAvgMap.forEach((stat, url) => {
-      const avgLimited = limitToTwoDecimalPlaces(stat.avg);
+      const avgLimited = limitToThreeDecimalPlaces(stat.avg);
       const resultUrl: IResultUrl = {
         result: avgLimited,
         url,

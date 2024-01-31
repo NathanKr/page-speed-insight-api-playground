@@ -40,7 +40,9 @@ const PsiPull = () => {
   return (
     <div>
       <h1>PsiPull</h1>
-      <button onClick={() => refetch()}>Fetch all samples</button>
+      <button onClick={() => {
+        refetch();
+      }}>Fetch all samples</button>
       <div>
       {elemsStatsSummary}
       <p>{isFetching ? 'Fetching...' : null}</p>

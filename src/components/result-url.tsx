@@ -2,7 +2,7 @@ import IResultUrl from "@/types/i-result-url";
 import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
-import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
+import { limitToThreeDecimalPlaces } from "@/utils/common/psi-utils";
 
 const ResultUrl: FC<IResultUrl> = ({ type, result, url }) => {
   const resultElem =
@@ -11,7 +11,7 @@ const ResultUrl: FC<IResultUrl> = ({ type, result, url }) => {
         score : <ColorPsiScore score={result} as="span" />
       </>
     ) : (
-      <>value : {limitToTwoDecimalPlaces(result)}</>
+      <>value : {limitToThreeDecimalPlaces(result)}</>
     );
   return (
     <>

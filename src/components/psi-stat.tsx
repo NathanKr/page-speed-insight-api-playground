@@ -1,7 +1,7 @@
 import IStat from "@/types/i-stat";
 import { FC } from "react";
 import ColorPsiScore from "./color-psi-score";
-import { limitToTwoDecimalPlaces } from "@/utils/common/psi-utils";
+import {  limitToThreeDecimalPlaces } from "@/utils/common/psi-utils";
 import EInterestingLighthouseResultType from "@/types/e-interesting-lighthouse-result-type";
 
 interface IProps {
@@ -14,13 +14,13 @@ const PsiStat: FC<IProps> = ({ stat }) => {
     type == EInterestingLighthouseResultType.score ? (
       <ColorPsiScore score={avg} as="span" />
     ) : (
-      <span>{limitToTwoDecimalPlaces(avg)}</span>
+      <span>{limitToThreeDecimalPlaces(avg)}</span>
     );
   return (
     <>
       {name}{" "}
       {type == EInterestingLighthouseResultType.score ? "score" : "value"}, Avg
-      : {elemAvg}, Std :{limitToTwoDecimalPlaces(std)}
+      : {elemAvg}, Std :{limitToThreeDecimalPlaces(std)}
     </>
   );
 };
