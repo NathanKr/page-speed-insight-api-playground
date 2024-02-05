@@ -4,10 +4,8 @@ import IGetPsiInfo from "@/types/i-get-psi-info";
 // const baseUrl = "https://nathan-krasney-iex9gkios-natankrasney-gmailcom-s-team.vercel.app/"
 //  const baseUrl = "https://nathan-krasney-7xtfq4ese-natankrasney-gmailcom-s-team.vercel.app"
 // const baseUrl = "https://nathan-krasney-jfwafu53e-natankrasney-gmailcom-s-team.vercel.app"
-  const baseUrl = "https://nathankrasney.com";
+const baseUrl = "https://nathankrasney.com";
 
-
-  
 const tabs: string[] = [
   "/",
   "/about",
@@ -29,6 +27,8 @@ const tabs: string[] = [
 ];
 
 export const PSI_API_SAMPLE_SAVE_TO_MONGODB = true;
+export const URL_CONTAIN = '/nathankrasney.com'
+
 
 const catChosen = {
   performance: true,
