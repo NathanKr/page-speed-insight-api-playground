@@ -6,6 +6,8 @@ import axios from "axios";
 import { URL_CONTAIN } from "../../data/infos";
 import IGetStats from "@/types/i-get-stats";
 import { useRef } from "react";
+import { getDefaultDateFromInput, getMsFrom1970FromDatetimeInputValue } from "@/utils/client/utils";
+import Button from "@mui/material/Button";
 
 const queryKey = ["latestOffline"];
 
@@ -23,20 +25,13 @@ const PsiPull = () => {
     const url = InternalApiUrl.stats;
     const params: IGetStats = {
       urlContain: urlContainRef.current!.value,
-      createdMin: getMsFrom1970FromDatetimeValue(createdMinRef.current!.value),
-      createdMax: getMsFrom1970FromDatetimeValue(createdMaxRef.current!.value),
+      createdMin: getMsFrom1970FromDatetimeInputValue(createdMinRef.current!.value),
+      createdMax: getMsFrom1970FromDatetimeInputValue(createdMaxRef.current!.value),
     };
     const data: IStatsApi = (await axios.get(url, { params })).data;
     return data;
   }
 
-  function getDefaultDate(msFrom1970: number): string {
-    return new Date(msFrom1970).toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
-  }
-
-  function getMsFrom1970FromDatetimeValue(datetimeValue: string): number {
-    return new Date(datetimeValue).getTime();
-  }
 
   const elemsStatsSummary = data ? (
     <>
@@ -63,29 +58,29 @@ const PsiPull = () => {
         <br />
         <input type="text" ref={urlContainRef} defaultValue={URL_CONTAIN} />
         <br />
-        <label>Start time [ms from 1970]</label>
+        <label>Start time [UTC]</label>
         <br />
         <input
           type="datetime-local"
           ref={createdMinRef}
-          defaultValue={getDefaultDate(1706943982515)}
+          defaultValue={getDefaultDateFromInput(1706943982515)}
         />
         <br />
-        <label>End time [ms from 1970]</label>
+        <label>End time [UTC]</label>
         <br />
         <input
           type="datetime-local"
           ref={createdMaxRef}
-          defaultValue={getDefaultDate(new Date().getTime())}
+          defaultValue={getDefaultDateFromInput(new Date().getTime())}
         />
       </div>
-      <button
+      <Button variant="contained"
         onClick={() => {
           refetch();
         }}
       >
         Fetch all samples
-      </button>
+      </Button>
       <div>
         {!isFetching && elemsStatsSummary}
         <p>{isFetching ? "Fetching..." : null}</p>

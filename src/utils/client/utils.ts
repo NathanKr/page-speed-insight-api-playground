@@ -1,33 +1,13 @@
 import dayjs from "dayjs";
 
-export function objectToQueryString(obj: Record<string, any>): string {
-  const queryString = Object.keys(obj)
-    .map((key) => {
-      const value = obj[key];
-      return value !== undefined
-        ? `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`
-        : "";
-    })
-    .filter(Boolean) // Remove empty string elements
-    .join("&");
 
-  return queryString;
+export function getDefaultDateFromInput(msFrom1970: number): string {
+  return new Date(msFrom1970).toISOString().slice(0, 16); // "YYYY-MM-DDTHH:mm"
 }
 
-export function appendQueryStringToUrl(
-  url: string,
-  queryString: string
-): string {
-  // Check if the URL already contains a query string
-  const separator = url.includes("?") ? "&" : "?";
-
-  // Concatenate the URL and query string
-  const fullUrl = `${url}${separator}${queryString}`;
-
-  return fullUrl;
+export function getMsFrom1970FromDatetimeInputValue(datetimeValue: string): number {
+  return new Date(datetimeValue).getTime();
 }
-
-
 
 export function getLocalDateAndTimeNow(): string {
   const now = new Date();

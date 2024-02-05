@@ -1,11 +1,6 @@
 import IGetPsiInfo from "@/types/i-get-psi-info";
 import { Root } from "@/types/google-api-psi-types";
-import {
-  appendQueryStringToUrl,
-  getLocalDateAndTimeNow,
-  objectToQueryString,
-  pauseMs,
-} from "@/utils/client/utils";
+import { getLocalDateAndTimeNow, pauseMs } from "@/utils/client/utils";
 import axios, { AxiosError } from "axios";
 import React, { FC, useState } from "react";
 import PsiScoreTableRow from "./psi-score-table-row";
@@ -22,7 +17,7 @@ import ISavePageRequestBody from "@/types/i-save-page-request-body";
 import ISavePageResponseData from "@/types/i-save-page-response-data";
 import { getAllInterestingLighthouseResultStat } from "@/utils/common/psi-results-utils";
 import { PSI_API_SAMPLE_SAVE_TO_MONGODB } from "../../data/infos";
-
+import Button from "@mui/material/Button";
 interface IProps {
   infos: IGetPsiInfo[];
   numRuns: number;
@@ -102,14 +97,12 @@ const PageSpeedInsight: FC<IProps> = ({
   }
 
   async function getPsiInfo(info: IGetPsiInfo): Promise<void> {
-    const baseApiUrl = InternalApiUrl.psi;
-    const queryString = objectToQueryString(info);
-    const url = appendQueryStringToUrl(baseApiUrl, queryString);
+    const url = InternalApiUrl.psi;
 
     setErr(null);
     setLoading(true);
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, { params: info });
 
       addNewInfo(response.data.root);
       setLoading(false);
@@ -185,9 +178,12 @@ const PageSpeedInsight: FC<IProps> = ({
     elemCompleteSummary = (
       <>
         <br />
-        <button onClick={() => setShowSummaryDetails(!showSummaryDetails)}>
+        <Button
+          variant="contained"
+          onClick={() => setShowSummaryDetails(!showSummaryDetails)}
+        >
           {showSummaryDetails ? "Hide Summary Details" : "Show Summary Details"}
-        </button>
+        </Button>
         {showSummaryDetails && (
           <PsiPerformanceStatsSummary psiUrl2FromRootsMap={psiFromRootsMap} />
         )}
@@ -209,20 +205,23 @@ const PageSpeedInsight: FC<IProps> = ({
         Samples saved to DB :{" "}
         {PSI_API_SAMPLE_SAVE_TO_MONGODB ? "true" : "false"}
       </p>
-      <button
+      <Button
+        variant="contained"
         disabled={allRunsStatus == RunStatus.started}
         onClick={getAllRunsInfo}
       >
         Start
-      </button>
+      </Button>
+      <br />
       <br />
       {elemCompleteTime}
-      <button
+      <Button
+        variant="contained"
         disabled={allRunsStatus == RunStatus.started}
         onClick={saveHtmlOnDisk}
       >
         Save html to file
-      </button>
+      </Button>
       {savePageResponseData && (
         <p>file path : {savePageResponseData.filePath}</p>
       )}
