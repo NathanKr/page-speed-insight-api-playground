@@ -23,12 +23,12 @@ const tabs: string[] = [
   "/posts/what-is-postcss",
   "/posts/reduce-css-file-size-for-better-performance",
   "/posts/srcset-and-responsive-images",
+  "/posts/load-image-faster-with-webp",
   "/events",
 ];
 
 export const PSI_API_SAMPLE_SAVE_TO_MONGODB = true;
-export const URL_CONTAIN = '/nathankrasney.com'
-
+export const URL_CONTAIN = "/nathankrasney.com";
 
 const catChosen = {
   performance: true,
